@@ -1,8 +1,8 @@
 shinyServer(
   pageWithSidebar(
-    headerPanel("Test Header"),
+    headerPanel("LoL Stats"),
     
-    sidebarPanel("Username",
+    sidebarPanel("Account Info",
       textInput("nameInput", "Name", ""),
       
       selectInput("region", "Region:",
@@ -15,10 +15,11 @@ shinyServer(
         label = "Get stats"
       )
     ),
-    mainPanel(
+    mainPanel("Stats",
+      
      # verbatimTextOutput("url1"),
      # verbatimTextOutput("url2"),
-      verbatimTextOutput("main")
+      textOutput("basicInfo")
     )
   )
 )
