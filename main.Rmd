@@ -1,10 +1,30 @@
 ---
 title: "leaguestats"
 output: html_document
----
 
+---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(httr)
+library(jsonlite)
+```
+
+
+```{r testApi, echo=FALSE}
+region = "na1"
+accountName = "dyrus"
+apiKey = "RGAPI-bf6d40f1-7678-474c-b4eb-e3f64fd0464a"
+
+
+url = paste("https://", region, ".api.riotgames.com/lol/summoner/v4/summoners/by-name/", accountName, "?api_key=", apiKey, sep = "")
+accountInfo = GET(url)
+accountInfo = fromJSON(rawToChar(accountInfo$content))
+
+url = paste("https://", region, ".api.riotgames.com/lol/league/v4/entries/by-summoner/", accountInfo$id, "?api_key=", apiKey, sep = "")
+rankedData = GET(url)
+rankedData = fromJSON(rawToChar(rankedData$content))
+
+print(paste(accountName, " is currently ranked ", tolower(rankedData$tier), " ", rankedData$rank, " in solo queue.", sep = ""))
 ```
 
 ## R Markdown
