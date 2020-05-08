@@ -7,13 +7,10 @@ shinyServer(
     observeEvent(
       eventExpr = input[["submit_loc"]],
       handlerExpr = {
-        rm(list=ls())
+        
         
         accountName = input$nameInput
         region = input$region
-        
-        accountName = "tyinthor"
-        region = "na1"
         
         apiKey = "RGAPI-bf6d40f1-7678-474c-b4eb-e3f64fd0464a"
         
@@ -35,7 +32,7 @@ shinyServer(
         
         output$main <- renderText({
           paste(accountName, " is currently ranked ", soloQRank, " in solo queue.", sep = "")
-        })
+        }) #TODO: Fix crash when no ranked soloq data. Caused by line 28
       }
     )
   }
