@@ -57,7 +57,7 @@ This would allow for analysis of any recent trends pertaining to a particular pl
 
 This is from the official Riot API, generated for each individual match. This gives detailed information about a specific match in detail. For example, number of towers killed, the people that played in this match, who won, etc.
 
-Here, you get 11 main columns of data to be analyzed, which have values by each frame of game time. Children data include data such as someone using a spell, destroying a building, leveling up, buying an item, etc. The number of rows depends upon the game, as games are of different length and thus have different frames. But, for example, as of writing this, Dyrus' most recent match had 2340647 frames of data.
+Here, you get 11 main columns of data to be analyzed, which have values by each frame of game time. Children data include data such as someone using a spell, destroying a building, leveling up, buying an item, etc. The number of rows depends upon the game, as games are of different length and thus have different frames. But, for example, as of writing this, Dyrus' most recent match had 2340647 frames of data, so that table would have 23406470 rows of data to be analyzed, as each frame appears to be split into 10 frames.
 
 Any particular insights that are based upon the events in a match can be gained from examining this data set. For example, trends such as those relating to objectives destroyed and its correlation to winning or losing a game, or various habits that may be present at higher skill levels compared to at lower skill levels (could be done by comparing trends of games from players of various ranks)
 
