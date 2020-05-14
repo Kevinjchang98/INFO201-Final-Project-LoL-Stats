@@ -1,6 +1,3 @@
-# Final Project
-Use this `REAMDE.md` file to describe your final project (as detailed on Canvas).
-
 # Project Setup
 I'm the only person, but if I were to have group mates I'd go to settings on the repo page, then manage access, then invite a collaborator.
 
