@@ -1,6 +1,6 @@
-# library(httr)
-# library(jsonlite)
-# library(dplyr)
+library(httr)
+library(jsonlite)
+library(dplyr)
 
 shinyServer(
   function(input, output){

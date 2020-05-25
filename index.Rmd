@@ -1,0 +1,20 @@
+---
+title: "MidpointDeliverable"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+## Problem Domain
+
+## Data
+
+# Summary of Available Data
+
+# Preliminary Charts
+
+
