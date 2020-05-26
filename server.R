@@ -1,6 +1,6 @@
-# library(httr)
-# library(jsonlite)
-# library(dplyr)
+library(httr)
+library(jsonlite)
+library(dplyr)
 
 shinyServer(
   function(input, output){
@@ -10,8 +10,7 @@ shinyServer(
         accountName = input$nameInput
         region = input$region
         
-        apiKey = "RGAPI-bf6d40f1-7678-474c-b4eb-e3f64fd0464a"
-        
+         
         output$basicInfo <- renderText({
           printRankedData(accountName, region, apiKey)
         })

@@ -1,0 +1,36 @@
+---
+title: "MidpointDeliverable"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+name <- "BoxBox"
+region <- "na1"
+```
+
+# Introduction
+This project will perform analysis on League of Legends data. It will provide an in-depth analysis of a particular player's recent statistics based upon their most recent 100 games, as well as provide more meta-level analysis comparing trends of the player base as a whole over a larger period of time. Any such insights obtained here can very easily be recreated for any player given the flexibility of the API.
+
+## Problem Domain
+
+# Data
+For this midpoint deliverable report, `r name`'s player data is chosen to be analyzed.
+
+## Summary of Available Data
+```{r generate_summary, include = FALSE}
+source(file = "./scripts/summary.R")
+summary(name, region)
+```
+
+`r ranked_summary`
+
+
+# Preliminary Charts
+
+## Champion Data
+```{r champion_graph, echo=FALSE}
+source(file = "./scripts/graphChampion.R")
+graph_champion_freq
+```
