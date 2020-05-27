@@ -1,89 +1,96 @@
 source("./scripts/apikey.R")
 
-get_ranked_data <- function(account_name, region, api_key) {
+get_ranked_data <- function(accountName, region, apiKey) {
   url <- paste("https://", region,
               ".api.riotgames.com/lol/summoner/v4/summoners/by-name/",
-              account_name,
+              accountName,
               "?api_key=",
-              api_key,
+              apiKey,
               sep = "")
-  account_info <- GET(url)
-  account_info <- fromJSON(rawToChar(account_info$content))
+  accountInfo <- GET(url)
+  accountInfo <- fromJSON(rawToChar(accountInfo$content))
 
   url <- paste("https://", region,
               ".api.riotgames.com/lol/league/v4/entries/by-summoner/",
-              account_info$id,
+              accountInfo$id,
               "?api_key=",
-              api_key,
+              apiKey,
               sep = "")
-  ranked_data <- GET(url)
-  ranked_data <- fromJSON(rawToChar(ranked_data$content))
+  rankedData <- GET(url)
+  rankedData <- fromJSON(rawToChar(rankedData$content))
 
-  solo_q_rank <- ranked_data %>%
+  soloQRank <- rankedData %>%
     filter(queueType == "RANKED_SOLO_5x5") %>%
     select(tier, rank)
 
-  solo_q_rank <- paste(tolower(solo_q_rank$tier), solo_q_rank$rank, sep = " ")
+  soloQRank <- paste(tolower(soloQRank$tier), soloQRank$rank, sep = " ")
 
-  summoner_name <- ranked_data %>%
+  summonerName <- rankedData %>%
     filter(queueType == "RANKED_SOLO_5x5") %>%
-    select(summoner_name) %>%
+    select(summonerName) %>%
     pull()
 
-  current_lp <- ranked_data %>%
+  currentLP <- rankedData %>%
     filter(queueType == "RANKED_SOLO_5x5") %>%
     select(leaguePoints) %>%
     pull()
 
-  return(c(name = summoner_name,
-           rank = solo_q_rank,
-           LP = current_lp))
+  return(c(name = summonerName,
+           rank = soloQRank,
+           LP = currentLP))
 }
 
+print_ranked_data <- function(accountName, region, apiKey) {
+  tryCatch({
+    getRankedData(accountName, region, apiKey)
+  }, error = function(e) {
+    "Could not get ranked data."
+  })
+}
 
-get_match_data <- function(account_name, region, api_key) {
+get_match_data <- function(accountName, region, apiKey) {
   url <- paste("https://", region,
               ".api.riotgames.com/lol/summoner/v4/summoners/by-name/",
-              account_name,
+              accountName,
               "?api_key=",
-              api_key,
+              apiKey,
               sep = "")
-  account_info <- GET(url)
-  account_info <- fromJSON(rawToChar(account_info$content))
+  accountInfo <- GET(url)
+  accountInfo <- fromJSON(rawToChar(accountInfo$content))
 
   url <- paste("https://",
               region,
               ".api.riotgames.com/lol/match/v4/matchlists/by-account/",
-              account_info$accountId,
+              accountInfo$accountId,
               "?api_key=",
               apiKey,
               sep = "")
-  match_data <- GET(url)
-  match_data <- fromJSON(rawToChar(match_data$content))
+  matchData <- GET(url)
+  matchData <- fromJSON(rawToChar(matchData$content))
 
-  return(match_data$matches)
+  return(matchData$matches)
 }
 
 get_champion_constants <- function() {
   url <-
     "http://ddragon.leagueoflegends.com/cdn/10.9.1/data/en_US/champion.json"
-  champion_constants <- GET(url)
-  champion_constants <- fromJSON(content(champion_constants, "text"))
-  champion_constants <- champion_constants$data
+  championConstants <- GET(url)
+  championConstants <- fromJSON(content(championConstants, "text"))
+  championConstants <- championConstants$data
 
-  return(champion_constants)
+  return(championConstants)
 }
 
-get_single_match_data <- function(match_id, champ_id, region, api_key) {
+get_single_match_data <- function(matchID, champID, region, apiKey) {
   url <- paste("https://", region,
                ".api.riotgames.com/lol/match/v4/matches/",
-               match_id,
+               matchID,
                "?api_key=",
-               api_key,
+               apiKey,
                sep = "")
-  single_match_data <- GET(url)
-  single_match_data <- fromJSON(rawToChar(single_match_data$content))
-  participants <- single_match_data$participants
+  singleMatchData <- GET(url)
+  singleMatchData <- fromJSON(rawToChar(singleMatchData$content))
+  participants <- singleMatchData$participants
 
   player_stats <- participants %>%
     filter(championId == champID)
@@ -91,24 +98,24 @@ get_single_match_data <- function(match_id, champ_id, region, api_key) {
   return(player_stats)
 }
 
-get_single_match_data_gcid <- function(game_champ_id, api_key) {
+get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
 
-  game_champ_id <- strsplit(game_champ_id, " ")[[1]]
-  match_id <- game_champ_id[[1]]
-  champ_id <- game_champ_id[[2]]
+  gameChampId <- strsplit(gameChampId, " ")[[1]]
+  matchId <- gameChampId[[1]]
+  champId <- gameChampId[[2]]
 
-  match_data <- get_single_match_data(match_id, champ_id, "na1", api_key)
+  matchData <- get_single_match_data(matchId, champId, "na1", apiKey)
 
-  player_match_stats <- match_data$stats
+  playerMatchStats <- matchData$stats
 
-  return(player_match_stats)
+  return(playerMatchStats)
 }
 
-get_recent_match_data <- function(game_champ_id, api_key) {
+get_recent_match_data <- function(gameChampId, apiKey) {
   n <- 0
   return_df <- data.frame()
-  # For debugging use game_champ_id <- head(game_champ_id, n = 20)
-  for (game in game_champ_id) {
+  # For debugging use gameChampId <- head(gameChampId, n = 20)
+  for (game in gameChampId) {
     Sys.sleep(0.2)
     n <- n + 1
     if ((n - 1) %% 10 == 0 && n > 5) {
@@ -132,7 +139,7 @@ get_recent_match_data <- function(game_champ_id, api_key) {
     }
   }
 
-  return_df$game_champ_id <- game_champ_id
+  return_df$gameChampId <- gameChampId
 
   return(return_df)
 }
