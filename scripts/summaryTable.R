@@ -8,7 +8,8 @@ format_summary_table <- function(champion_summary) {
            avgTotDmg,
            avgGoldEarned,
            avgCS) %>% 
-    mutate(avgKDA = round(avgKDA, 2),
+    mutate(freq = round(freq, 0),
+           avgKDA = round(avgKDA, 2),
            avgTotDmg = round(avgTotDmg, 0),
            avgGoldEarned = round(avgGoldEarned, 0),
            avgCS = round(avgCS, 0),

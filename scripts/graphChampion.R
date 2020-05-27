@@ -18,4 +18,4 @@ graph_champion_freq <- function(champion_summary) {
   return(return_plot)
 }
 
-#  geom_text(aes(y = lab_ypos, label = freq, group = winInt), color = "white", size = 3) +
+#  

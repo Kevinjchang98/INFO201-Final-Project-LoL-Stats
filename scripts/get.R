@@ -89,41 +89,19 @@ get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
   return(playerMatchStats)
 }
 
-# # Note: Rate limit 20 req per 1 sec, and 100 req per 2 min
-# get_win_boolean_list <- function(df, apiKey) {
-#   # n <- 0
-#   # return_list <- list()
-#   # for(game in gameChampId) {
-#   #   Sys.sleep(0.1)
-#   #   n <- n + 1
-#   #   if ((n - 1) %% 10 == 0) {
-#   #     message("Waiting 2.5 seconds for rate limit.")
-#   #     Sys.sleep(2.5)
-#   #   }
-#   #   message(paste0("Getting win/loss stat for match ", game, "; match no ", n))
-#   #   recentMatchData <- get_single_match_data_gameChampId(game, apikey)
-#   #   return_list <- c(return_list, recentMatchData$win)
-#   # }
-#   # return(return_list)
-#   
-#   
-#   
-#   
-# }
-
-
 get_recent_match_data <- function(gameChampId, apiKey) {
   n <- 0
   return_df <- data.frame()
+  # gameChampId <- head(gameChampId, n = 20)
   for(game in gameChampId) {
-    Sys.sleep(0.1)
+    Sys.sleep(0.2)
     n <- n + 1
-    if ((n - 1) %% 10 == 0) {
-      message("Waiting 2.5 seconds for rate limit.")
-      Sys.sleep(2.5)
+    if ((n - 1) %% 10 == 0 && n > 5) {
+      message("Waiting 2 seconds for rate limit.")
+      Sys.sleep(2)
     }
     
-    message(paste0("Getting win/loss stat for match ", game, "; match no ", n))
+    message(paste0("Getting stats for match ", game, "; match no ", n))
     
     new_match_data <- get_single_match_data_gameChampId(game, apikey)
     if (n == 1) {
@@ -136,9 +114,7 @@ get_recent_match_data <- function(gameChampId, apiKey) {
         subset(return_df, select = common_cols),
         subset(new_match_data, select = common_cols)
       )
-      
     }
-    
   }
   
   return_df$gameChampId <- gameChampId
