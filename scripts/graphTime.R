@@ -12,6 +12,6 @@ graph_time <- function(time_summary) {
          fill = "Game outcome"
          ) +
     ggtitle("Games by Time Started")
-  
+
   return(return_plot)
 }

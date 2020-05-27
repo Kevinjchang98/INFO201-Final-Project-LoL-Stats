@@ -1,7 +1,5 @@
 theme_set(theme_minimal())
 
-# source("./scripts/summary.R")
-
 graph_champion_freq <- function(champion_summary) {
   return_plot <- ggplot(champion_summary,
                               aes(x = name,
@@ -13,9 +11,7 @@ graph_champion_freq <- function(champion_summary) {
        y = "Number of Games Played",
        fill = "Game outcome") +
   ggtitle("Recent Champions Played") +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
-  
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
   return(return_plot)
 }
-
-#  

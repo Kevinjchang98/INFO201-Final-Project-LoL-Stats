@@ -1,7 +1,4 @@
-#library(ggplot2)
 theme_set(theme_minimal())
-
-#source("./scripts/summary.R")
 
 graph_winrate <- function(win_summary) {
   graph_kda <- ggplot(data = win_summary) +
@@ -14,7 +11,7 @@ graph_winrate <- function(win_summary) {
     labs(x = "Win/Loss", y = "KDA")  +
     ggtitle("KDA") +
     theme(legend.position = "none")
-  
+
   graph_dmg <- ggplot(data = win_summary) +
     geom_col(mapping = aes(x = win, y = avgTotDmg, fill = win)) +
     geom_errorbar(aes(ymin = avgTotDmg - sigmaTotDmg,
@@ -26,7 +23,7 @@ graph_winrate <- function(win_summary) {
     ggtitle("Damage") +
     scale_y_continuous(labels = comma) +
     theme(legend.position = "none")
-  
+
   graph_gold <- ggplot(data = win_summary) +
     geom_col(mapping = aes(x = win, y = avgGoldEarned, fill = win)) +
     geom_errorbar(aes(ymin = avgGoldEarned - sigmaGoldEarned,
@@ -38,7 +35,7 @@ graph_winrate <- function(win_summary) {
     ggtitle("Gold Earned") +
     scale_y_continuous(labels = comma) +
     theme(legend.position = "none")
-  
+
   graph_cs <- ggplot(data = win_summary) +
     geom_col(mapping = aes(x = win, y = avgCS, fill = win)) +
     geom_errorbar(aes(ymin = avgCS - sigmaCS,
@@ -50,7 +47,7 @@ graph_winrate <- function(win_summary) {
     ggtitle("Creep Score") +
     scale_y_continuous(labels = comma) +
     theme(legend.position = "none")
-  
+
   return(grid.arrange(graph_kda, graph_dmg, graph_gold, graph_cs,
                       nrow = 1))
 }
