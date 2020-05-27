@@ -1,9 +1,21 @@
-library(ggplot2)
+theme_set(theme_minimal())
 
-source("./scripts/summary.R")
+# source("./scripts/summary.R")
 
-graph_champion_freq <- ggplot(data = champion_summary) +
-  geom_col(mapping = aes(x = name, y = freq)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(x = "Champion", y = "Number of Games Played") +
-  ggtitle("Recent Champions Played")
+graph_champion_freq <- function(champion_summary) {
+  return_plot <- ggplot(champion_summary,
+                              aes(x = name,
+                                  y = freq,
+                                  group = factor(winInt))) +
+  geom_col(aes(fill = factor(winInt, labels = c("Loss", "Win"))),
+           width = 0.7) +
+  labs(x = "Champion",
+       y = "Number of Games Played",
+       fill = "Game outcome") +
+  ggtitle("Recent Champions Played") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  
+  return(return_plot)
+}
+
+#  geom_text(aes(y = lab_ypos, label = freq, group = winInt), color = "white", size = 3) +
