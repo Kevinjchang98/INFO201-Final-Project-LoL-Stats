@@ -1,6 +1,7 @@
-library(httr)
-library(jsonlite)
-library(dplyr)
+# library(httr)
+# library(jsonlite)
+# library(dplyr)
+#library(gtools) for smartbind instead of rbind
 
 source("./scripts/apikey.R")
 
@@ -29,7 +30,9 @@ get_ranked_data <- function(accountName, region, apiKey) {
     select(leaguePoints) %>% 
     pull()
   
-  return(paste(summonerName, " is currently ranked ", soloQRank, " in solo queue with ", currentLP, " LP.", sep = ""))
+  return(c(name = summonerName,
+           rank = soloQRank, 
+           LP = currentLP))
 }
 
 print_ranked_data <- function(accountName, region, apiKey) {
@@ -73,7 +76,7 @@ get_single_match_data <- function(matchID, champID, region, apiKey) {
   return(player_stats)
 }
 
-get_win_boolean <- function(gameChampId, apiKey) {
+get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
   
   gameChampId <- strsplit(gameChampId, " ")[[1]]
   matchId <- gameChampId[[1]]
@@ -83,17 +86,39 @@ get_win_boolean <- function(gameChampId, apiKey) {
   
   playerMatchStats <- matchData$stats
   
-  return(playerMatchStats$win)
+  return(playerMatchStats)
 }
 
-# Note: Rate limit 20 req per 1 sec, and 100 req per 2 min
-get_win_boolean_list <- function(gameChampId, apiKey) {
-  return_list <- list()
+get_recent_match_data <- function(gameChampId, apiKey) {
+  n <- 0
+  return_df <- data.frame()
+  # gameChampId <- head(gameChampId, n = 20)
   for(game in gameChampId) {
-    Sys.sleep(0.06)
-    print(paste0("Getting win/loss stat for match ", game))
-    return_list <- c(return_list, get_win_boolean(game, apikey))
+    Sys.sleep(0.2)
+    n <- n + 1
+    if ((n - 1) %% 10 == 0 && n > 5) {
+      message("Waiting 2 seconds for rate limit.")
+      Sys.sleep(2)
+    }
+    
+    message(paste0("Getting stats for match ", game, "; match no ", n))
+    
+    new_match_data <- get_single_match_data_gameChampId(game, apikey)
+    if (n == 1) {
+      return_df <- rbind(return_df, new_match_data)
+    }
+    else {
+      common_cols <- intersect(colnames(return_df), colnames(new_match_data))
+      
+      return_df <- rbind(
+        subset(return_df, select = common_cols),
+        subset(new_match_data, select = common_cols)
+      )
+    }
   }
-  return(return_list)
+  
+  return_df$gameChampId <- gameChampId
+
+  return(return_df)
 }
 
