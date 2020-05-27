@@ -27,7 +27,7 @@ get_ranked_data <- function(account_name, region, api_key) {
 
   summoner_name <- ranked_data %>%
     filter(queueType == "RANKED_SOLO_5x5") %>%
-    select(summoner_name) %>%
+    select(summonerName) %>%
     pull()
 
   current_lp <- ranked_data %>%
@@ -56,7 +56,7 @@ get_match_data <- function(account_name, region, api_key) {
               ".api.riotgames.com/lol/match/v4/matchlists/by-account/",
               account_info$accountId,
               "?api_key=",
-              apiKey,
+              api_key,
               sep = "")
   match_data <- GET(url)
   match_data <- fromJSON(rawToChar(match_data$content))
@@ -86,7 +86,7 @@ get_single_match_data <- function(match_id, champ_id, region, api_key) {
   participants <- single_match_data$participants
 
   player_stats <- participants %>%
-    filter(championId == champID)
+    filter(championId == champ_id)
 
   return(player_stats)
 }
@@ -107,7 +107,7 @@ get_single_match_data_gcid <- function(game_champ_id, api_key) {
 get_recent_match_data <- function(game_champ_id, api_key) {
   n <- 0
   return_df <- data.frame()
-  # For debugging use game_champ_id <- head(game_champ_id, n = 20)
+  game_champ_id <- head(game_champ_id, n = 20)
   for (game in game_champ_id) {
     Sys.sleep(0.2)
     n <- n + 1
@@ -118,7 +118,7 @@ get_recent_match_data <- function(game_champ_id, api_key) {
 
     message(paste0("Getting stats for match ", game, "; match no ", n))
 
-    new_match_data <- get_single_match_data_gameChampId(game, apikey)
+    new_match_data <- get_single_match_data_gcid(game, apikey)
     if (n == 1) {
       return_df <- rbind(return_df, new_match_data)
     }

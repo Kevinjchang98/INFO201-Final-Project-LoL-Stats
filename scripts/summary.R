@@ -24,7 +24,7 @@ summary <- function(name, region) {
   #
   # get_win_boolean_list() function has a Sys.sleep(0.06) to prevent hitting the
   # 20 requests per 1 second rate limit
-  if (TRUE) {
+  if (FALSE) {
     message("Waiting 2 mins for rate limit")
     n <- 0
     for (n in seq(from = 1, to = 120, by = 1)) {
