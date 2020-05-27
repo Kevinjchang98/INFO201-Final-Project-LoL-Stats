@@ -1,13 +1,13 @@
 format_summary_table <- function(champion_summary) {
-  summary_table <- champion_summary %>% 
-    group_by(name) %>% 
+  summary_table <- champion_summary %>%
+    group_by(name) %>%
     select(name,
            winInt,
            freq,
            avgKDA,
            avgTotDmg,
            avgGoldEarned,
-           avgCS) %>% 
+           avgCS) %>%
     mutate(freq = round(freq, 0),
            avgKDA = round(avgKDA, 2),
            avgTotDmg = round(avgTotDmg, 0),
@@ -17,15 +17,15 @@ format_summary_table <- function(champion_summary) {
              winInt == 1,
              "Win",
              "Loss")
-           ) %>% 
+           ) %>%
     rename("Champion" = name,
            "Win/Loss" = winInt,
            "Games played" = freq,
            "Average KDA Ratio" = avgKDA,
            "Average Total Damage" = avgTotDmg,
            "Average Gold Earned" = avgGoldEarned,
-           "Average CS" = avgCS) 
-  
-  
+           "Average CS" = avgCS)
+
+
   return(summary_table)
 }

@@ -34,7 +34,7 @@ source(file = "./scripts/summary.R")
 summary(name, region)
 ```
 
-`r info_account_name` is currently ranked `r info_rank` with `r info_LP` LP. In the last 100 games, their winrate has been `r info_winrate`. Their most played champion is `r info_most_played_champion`.
+`r info_account_name` is currently ranked `r info_rank` with `r info_lp` LP. In the last 100 games, their winrate has been `r info_winrate`. Their most played champion is `r info_most_played_champion`.
 
 #### Per-Champion Player Statistics for `r info_account_name`
 ```{r tables, echo = FALSE, cache=FALSE}
@@ -44,6 +44,7 @@ kable(format_summary_table(champion_summary))
 ```
 
 A summary of their per-character stats split into games won and lost can be seen in the above table. Statistics were split into each champion played, and further into whether those games played were won or lost, as averaging together statistics for vastly different roles would be unreasonable, and splitting games by whether they were won or lost allows for the comparison of which factors appear to vary between won and lost games.
+
 # Preliminary Charts
 
 ## Frequently Played Champions
@@ -63,7 +64,7 @@ source(file = "./scripts/graphWinrate.R")
 graph_winrate(win_summary)
 ```
 
-These charts provide a comparison of average player stats in the games `r info_account_name` has won and lost. One may gain insight into possible avenues of improvement from these stats. For example, if one's CS is varying a lot between the games they lost and won in but their KDA is not, that may suggest that an effective way to improve one's chances of improving would be to focus on CS rather than improving their KDA. These stats are highly contextual, however, and should only provide an overview to how differently a player's stats are in the games they won compared to those that they lost.
+These charts provide a comparison of average player stats in the games `r info_account_name` has won and lost. One may gain insight into possible avenues of improvement from these stats. For example, if one's CS is varying a lot between the games they lost and won in but their KDA is not, that may suggest that an effective way to improve one's chances of improving would be to focus on CS rather than improving their KDA. These stats are highly contextual, however, and should only provide an overview to how differently a player's stats are in the games they won compared to those that they lost. The error bars are the standard deviation for the stats.
 
 In `r info_account_name`'s case in particular, some example insights may be gained from these graphs. The CS difference between games won and lost are relatively minimal whereas KDA has quite a large variance, which may suggest that `r info_account_name` isn't missing a lot of CS while in lane as a lower-ranked player might, and thus causing them to lose games. Instead, there appear to be relatively similar amount of CS, suggesting that other factors, such as early kills or deaths snowballing to more kills or deaths, may be more important in deciding whether `r info_account_name`'s game will end up in a win or loss for them.
 
