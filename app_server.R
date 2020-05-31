@@ -5,11 +5,11 @@ server <- function(input, output){
   observeEvent(
     eventExpr = input[["submit_loc"]],
     handlerExpr = {
-      accountName = input$nameInput
+      accountName = input$accountName
       region = input$region
       
       output$basicInfo <- renderText({
-        get_ranked_data(accountName, region, apiKey)
+        print_ranked_data(accountName, region, apiKey)
       })
     }
   )
