@@ -25,7 +25,7 @@ get_ranked_data <- function(accountName, region, apiKey) {
   
   soloQRank <- paste(tolower(soloQRank$tier), soloQRank$rank, sep = " ")
   
-  summonerName <- rankedData %>%
+  summonerName <<- rankedData %>%
     filter(queueType == "RANKED_SOLO_5x5") %>%
     select(summonerName) %>%
     pull()
@@ -106,9 +106,9 @@ get_single_match_data <- function(matchID, champID, region, apiKey) {
     
     return(player_stats)
   }, error = function(e) {
-    
+    return(NULL)
   })
-
+  
 }
 
 get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
@@ -116,7 +116,6 @@ get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
   gameChampId <- strsplit(gameChampId, " ")[[1]]
   matchId <- gameChampId[[1]]
   champId <- gameChampId[[2]]
-  
   
   tryCatch({
     matchData <- get_single_match_data(matchId, champId, "na1", apiKey)
@@ -127,17 +126,18 @@ get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
   }, error = function(e) {
     
   })
-  
-
 }
 
+#TODO: Off by one error if a middle request is missing. e.g., if match 60 is missing,
+# it thinks match 61 is match 60 for stats, throwing off everything
 get_recent_match_data <- function(gameChampId, apiKey) {
   withProgress(message = "Retrieving stats", value = 0, {
     n <- 0
     m <- 0
     return_df <- data.frame()
     
-    gameChampId <- head(gameChampId, n = 50)
+    message(nrow(gameChampId))
+    #gameChampId <- head(gameChampId, n = 20)
     for (game in gameChampId) {
       Sys.sleep(0.5)
       n <- n + 1
@@ -171,14 +171,13 @@ get_recent_match_data <- function(gameChampId, apiKey) {
     }
     
     message("Trying to combine")
-    message(nrow(gameChampId))
+    message(length(gameChampId))
     message("asdf")
     message(nrow(return_df))
     
-    message(nrow(gameChampId[1:m]))
+    message(length(gameChampId[1:m]))
     message('ahufoi')
-    return_df$gameChampId <- gameChampId[1:m]
-    
+
     return(return_df)
   })
 

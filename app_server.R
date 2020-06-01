@@ -12,10 +12,37 @@ server <- function(input, output){
       request_time <- Sys.time()
       name <<- input$accountName
       region <<- input$region
+      numGames <<- input$numGames
+      rankedInfoString <- print_ranked_data(name, region, apiKey)
+
       
       output$basicInfo <- renderText({
-        print_ranked_data(name, region, apiKey)
+        rankedInfoString
       })
+      
+      if(rankedInfoString != "Could not get ranked data.") {
+        
+        leagueString <- strsplit(rankedInfoString, " ")[[1]][5]
+        leagueString <- paste(toupper(substring(leagueString, 1,1)),
+                              substring(leagueString, 2),
+                              sep="", collapse=" ")
+        leagueString <- paste0("Emblem_",
+                               leagueString,
+                               ".png")
+        
+        message(leagueString)
+        
+        pathToImage <- reactive({
+          leagueString
+        })
+        
+        output$leagueImage <- renderUI({
+          tags$img(src = pathToImage(),
+                   style = "width: 100%")
+        })
+      }
+      
+      
 
       debugWaitTime <- 5
       

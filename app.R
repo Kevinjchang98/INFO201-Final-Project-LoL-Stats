@@ -16,6 +16,4 @@ source("./scripts/graphChampion.R")
 source("./scripts/graphTime.R")
 source("./scripts/graphWinratePie.R")
 
-numGames <- 20
-
 shinyApp(ui = ui, server = server)

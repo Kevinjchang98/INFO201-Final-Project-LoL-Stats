@@ -23,8 +23,19 @@ if (FALSE) {
 
 # 100 requests
 recent_match_data <<- data.frame()
+
+match_summary <- head(match_summary, n = numGames)
+message(nrow(match_summary))
+
 recent_match_data <<- get_recent_match_data(match_summary$gameChampId)
+message('return success')
+
 Sys.sleep(1)
+
+message('31 appdata')
+message(nrow(recent_match_data))
+
+recent_match_data$gameChampId <- match_summary$gameChampId[1:nrow(recent_match_data)]
 
 match_summary <<- left_join(match_summary, recent_match_data) %>%
   mutate(winInt = as.integer(as.logical(win)),
@@ -35,6 +46,7 @@ match_summary <<- left_join(match_summary, recent_match_data) %>%
            strptime(match_summary$time, "%H:%M:%S"), "%H"))
   ) %>%
   dplyr::rename(key = champion)
+message('48 appdata')
 
 match_summary <<- match_summary %>%
   mutate(hour = as.numeric(format(
@@ -55,8 +67,7 @@ champion_summary <<- match_summary %>%
                    avgTotDmg = mean(totalDamageDealt),
                    avgVisionScore = mean(visionScore),
                    avgGoldEarned = mean(goldEarned),
-                   avgCS = mean(totalMinionsKilled + neutralMinionsKilled),
-                   avgWards = mean(wardsPlaced))
+                   avgCS = mean(totalMinionsKilled + neutralMinionsKilled))
 
 # Data based on win/loss
 win_summary <<- match_summary %>%
@@ -70,7 +81,6 @@ win_summary <<- match_summary %>%
                    avgVisionScore = mean(visionScore),
                    avgGoldEarned = mean(goldEarned),
                    avgCS = mean(totalMinionsKilled + neutralMinionsKilled),
-                   avgWards = mean(wardsPlaced),
                    sigmaKills = sd(kills),
                    sigmaDeaths = sd(deaths),
                    sigmaAssists = sd(assists),
@@ -103,7 +113,6 @@ time_summary <<- match_summary %>%
                    avgGoldEarned = mean(goldEarned),
                    avgCS = mean(totalMinionsKilled +
                                   neutralMinionsKilled),
-                   avgWards = mean(wardsPlaced),
                    sigmaKills = sd(kills),
                    sigmaDeaths = sd(deaths),
                    sigmaAssists = sd(assists),
