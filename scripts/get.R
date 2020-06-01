@@ -42,15 +42,15 @@ get_ranked_data <- function(accountName, region, apiKey) {
 
 print_ranked_data <- function(accountName, region, apiKey) {
   tryCatch({
-    info <- getRankedData(accountName, region, apiKey)
-    return(paste0(
-      info$name,
+    info <- get_ranked_data(accountName, region, apiKey)
+    paste0(
+      info[["name"]],
       " is currently ranked ",
-      info$rank,
+      info[["rank"]],
       " in solo queue with ",
-      info$LP,
+      info[["LP"]],
       " LP."
-    ))
+    )
   }, error = function(e) {
     "Could not get ranked data."
   })
@@ -96,14 +96,19 @@ get_single_match_data <- function(matchID, champID, region, apiKey) {
                "?api_key=",
                apiKey,
                sep = "")
-  singleMatchData <- GET(url)
-  singleMatchData <- fromJSON(rawToChar(singleMatchData$content))
-  participants <- singleMatchData$participants
-  
-  player_stats <- participants %>%
-    filter(championId == champID)
-  
-  return(player_stats)
+  tryCatch({
+    singleMatchData <- GET(url)
+    singleMatchData <- fromJSON(rawToChar(singleMatchData$content))
+    participants <- singleMatchData$participants
+    
+    player_stats <- participants %>%
+      filter(championId == champID)
+    
+    return(player_stats)
+  }, error = function(e) {
+    
+  })
+
 }
 
 get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
@@ -112,42 +117,69 @@ get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
   matchId <- gameChampId[[1]]
   champId <- gameChampId[[2]]
   
-  matchData <- get_single_match_data(matchId, champId, "na1", apiKey)
   
-  playerMatchStats <- matchData$stats
+  tryCatch({
+    matchData <- get_single_match_data(matchId, champId, "na1", apiKey)
+    
+    playerMatchStats <- matchData$stats
+    
+    return(playerMatchStats)
+  }, error = function(e) {
+    
+  })
   
-  return(playerMatchStats)
+
 }
 
 get_recent_match_data <- function(gameChampId, apiKey) {
-  n <- 0
-  return_df <- data.frame()
-  # For debugging use gameChampId <- head(gameChampId, n = 20)
-  for (game in gameChampId) {
-    Sys.sleep(0.2)
-    n <- n + 1
-    if ((n - 1) %% 10 == 0 && n > 5) {
-      message("Waiting 2 seconds for rate limit.")
-      Sys.sleep(2)
-    }
+  withProgress(message = "Retrieving stats", value = 0, {
+    n <- 0
+    m <- 0
+    return_df <- data.frame()
     
-    message(paste0("Getting stats for match ", game, "; match no ", n))
-    
-    new_match_data <- get_single_match_data_gameChampId(game, apikey)
-    if (n == 1) {
-      return_df <- rbind(return_df, new_match_data)
-    }
-    else {
-      common_cols <- intersect(colnames(return_df), colnames(new_match_data))
+    gameChampId <- head(gameChampId, n = 50)
+    for (game in gameChampId) {
+      Sys.sleep(0.5)
+      n <- n + 1
+      m <- m + 1
+      if ((n - 1) %% 10 == 0 && n > 5) {
+        #message("Waiting 2 seconds for rate limit.")
+        #Sys.sleep(2)
+      }
       
-      return_df <- rbind(
-        subset(return_df, select = common_cols),
-        subset(new_match_data, select = common_cols)
-      )
+      message(paste0("Getting stats for match ", game, "; match no ", n))
+      incProgress(amount = 1/100, detail = paste0("Getting stats for match ", n))
+      
+      new_match_data <- get_single_match_data_gameChampId(game, apikey)
+      if (n == 1) {
+        return_df <- rbind(return_df, new_match_data)
+      }
+      else {
+        common_cols <- intersect(colnames(return_df), colnames(new_match_data))
+        tryCatch({
+          return_df <- rbind(
+            subset(return_df, select = common_cols),
+            subset(new_match_data, select = common_cols)
+          )
+          
+          #return_df$gameChampId[n] <- gameChampId[n]
+        }, error = function(e) {
+          message(paste0("Couldn't get match ", n))
+          m <- m - 1
+        })
+      }
     }
-  }
-  
-  return_df$gameChampId <- gameChampId
-  
-  return(return_df)
+    
+    message("Trying to combine")
+    message(nrow(gameChampId))
+    message("asdf")
+    message(nrow(return_df))
+    
+    message(nrow(gameChampId[1:m]))
+    message('ahufoi')
+    return_df$gameChampId <- gameChampId[1:m]
+    
+    return(return_df)
+  })
+
 }
