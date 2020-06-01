@@ -21,7 +21,7 @@ if (FALSE) {
   }
 }
 
-# 100 requests
+# numGames requests
 recent_match_data <<- data.frame()
 
 match_summary <- head(match_summary, n = numGames)
@@ -32,7 +32,6 @@ message('return success')
 
 Sys.sleep(1)
 
-message('31 appdata')
 message(nrow(recent_match_data))
 
 recent_match_data$gameChampId <- match_summary$gameChampId[1:nrow(recent_match_data)]
@@ -46,7 +45,6 @@ match_summary <<- left_join(match_summary, recent_match_data) %>%
            strptime(match_summary$time, "%H:%M:%S"), "%H"))
   ) %>%
   dplyr::rename(key = champion)
-message('48 appdata')
 
 match_summary <<- match_summary %>%
   mutate(hour = as.numeric(format(

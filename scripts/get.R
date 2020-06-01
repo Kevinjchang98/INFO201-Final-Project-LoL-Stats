@@ -148,7 +148,7 @@ get_recent_match_data <- function(gameChampId, apiKey) {
       }
       
       message(paste0("Getting stats for match ", game, "; match no ", n))
-      incProgress(amount = 1/100, detail = paste0("Getting stats for match ", n))
+      incProgress(amount = 1/numGames, detail = paste0("Getting stats for match ", n))
       
       new_match_data <- get_single_match_data_gameChampId(game, apikey)
       if (n == 1) {
