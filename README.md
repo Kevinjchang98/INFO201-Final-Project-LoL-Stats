@@ -1,5 +1,6 @@
 # Links
 Link to midpoint deliverable: https://info-201a-sp20.github.io/final-project-Kevinjchang98/
+
 Link to final Shiny App: https://kevinjchang98.shinyapps.io/final-project-Kevinjchang98/
 
 # Project Setup
