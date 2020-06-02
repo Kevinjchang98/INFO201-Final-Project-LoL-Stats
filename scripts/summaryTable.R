@@ -26,6 +26,7 @@ format_summary_table <- function(champion_summary) {
            "Average Gold Earned" = avgGoldEarned,
            "Average CS" = avgCS)
 
+  summary_table$Champion <- as.character(summary_table$Champion)
 
   return(summary_table)
 }

@@ -112,7 +112,6 @@ get_single_match_data <- function(matchID, champID, region, apiKey) {
 }
 
 get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
-  
   gameChampId <- strsplit(gameChampId, " ")[[1]]
   matchId <- gameChampId[[1]]
   champId <- gameChampId[[2]]
@@ -124,19 +123,18 @@ get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
     
     return(playerMatchStats)
   }, error = function(e) {
-    
+    return(NULL)
   })
 }
 
 #TODO: Off by one error if a middle request is missing. e.g., if match 60 is missing,
 # it thinks match 61 is match 60 for stats, throwing off everything
 get_recent_match_data <- function(gameChampId, apiKey) {
-  withProgress(message = "Retrieving stats", value = 0, {
+  withProgress(message = "Retrieving stats for match #", value = 0, {
     n <- 0
     m <- 0
     return_df <- data.frame()
     
-    message(nrow(gameChampId))
     #gameChampId <- head(gameChampId, n = 20)
     for (game in gameChampId) {
       Sys.sleep(0.5)
@@ -148,7 +146,7 @@ get_recent_match_data <- function(gameChampId, apiKey) {
       }
       
       message(paste0("Getting stats for match ", game, "; match no ", n))
-      incProgress(amount = 1/numGames, detail = paste0("Getting stats for match ", n))
+      incProgress(amount = 1/numGames, detail = n)
       
       new_match_data <- get_single_match_data_gameChampId(game, apikey)
       if (n == 1) {
@@ -161,7 +159,6 @@ get_recent_match_data <- function(gameChampId, apiKey) {
             subset(return_df, select = common_cols),
             subset(new_match_data, select = common_cols)
           )
-          
           #return_df$gameChampId[n] <- gameChampId[n]
         }, error = function(e) {
           message(paste0("Couldn't get match ", n))
@@ -169,16 +166,6 @@ get_recent_match_data <- function(gameChampId, apiKey) {
         })
       }
     }
-    
-    message("Trying to combine")
-    message(length(gameChampId))
-    message("asdf")
-    message(nrow(return_df))
-    
-    message(length(gameChampId[1:m]))
-    message('ahufoi')
-
     return(return_df)
   })
-
 }

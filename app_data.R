@@ -7,11 +7,8 @@ match_summary <<- data.frame()
 match_summary <<- get_match_data(name, region, apikey) %>%
   mutate(gameChampId = paste(gameId, champion))
 
-# This asks for 100 requests, which can easily hit the 100 requests per 2 min
-# rate limit so there's a Sys.sleep(120) before this to reset the timer
-#
-# get_win_boolean_list() function has a Sys.sleep(0.06) to prevent hitting the
-# 20 requests per 1 second rate limit
+# For debugging, set flag to TRUE to auto wait for 2 mins
+# Obsolete in Shiny App by app_server.R's debugWaitTime
 if (FALSE) {
   message("Waiting 2 mins for rate limit")
   n <- 0
@@ -25,14 +22,11 @@ if (FALSE) {
 recent_match_data <<- data.frame()
 
 match_summary <- head(match_summary, n = numGames)
-message(nrow(match_summary))
 
 recent_match_data <<- get_recent_match_data(match_summary$gameChampId)
-message('return success')
 
 Sys.sleep(1)
 
-message(nrow(recent_match_data))
 
 recent_match_data$gameChampId <- match_summary$gameChampId[1:nrow(recent_match_data)]
 
@@ -133,18 +127,3 @@ time_summary <<- match_summary %>%
 info_winrate <<- mean(match_summary$winInt)
 
 winrate_data <<- win_summary[1:2, 1:2]
-
-
-
-# Most played champion
-# info_most_played_champion <<- champion_summary %>%
-#   group_by(name) %>%
-#   summarize(freq = sum(freq)) %>%
-#   filter(freq == max(freq)) %>%
-#   select(name) %>%
-#   mutate(name = as.character(name)) %>%
-#   pull()
-
-# # Somewhere the freq multiplies by 2
-# champion_summary <<- champion_summary %>%
-#   mutate(freq = freq / 2)

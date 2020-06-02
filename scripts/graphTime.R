@@ -15,3 +15,25 @@ graph_time <- function(time_summary) {
 
   return(return_plot)
 }
+
+graph_time_plotly <- function(time_summary) {
+  winData <- time_summary %>% 
+    filter(winInt == 1)
+  lossData <- time_summary %>% 
+    filter(winInt == 0)
+  return_plot <- plot_ly(winData,
+                         x = ~hour,
+                         y = ~freq,
+                         type = "bar",
+                         name = "Wins")
+  return_plot <- return_plot %>% 
+    add_trace(data = lossData,
+              x = ~hour,
+              y = ~freq,
+              name = "Losses")
+  return_plot <- return_plot %>% 
+    layout(yaxis = list(title = "Number of Games Played"),
+           barmode = "stack")
+  
+  return(return_plot)
+}
