@@ -1,97 +1,7 @@
-# ui <- navbarPage("LoL Stats", fluid = TRUE,
-#   tabPanel("Account",
-#     column(
-#       3, align = "center",
-#       fluidRow(
-#         h1("Account Info"),
-#         textInput(
-#           inputId = "accountName",
-#           label = "Account Name:",
-#           placeholder = "Account Name"),
-#         
-#         selectInput("region", "Region:",
-#                     c("NA" = "na1",
-#                       "EUW" = "euw1",
-#                       "KR" = "kr")
-#         ),
-#         
-#         sliderInput("numGames", "Number of Matches to Query:",
-#                     min = 1,
-#                     max = 100,
-#                     value = 50,
-#                     step =1),
-#         
-#         actionButton(
-#           inputId = "submit_loc",
-#           label = "Get stats")
-#       )
-#     ),
-#     
-#     column(
-#       9, align = "center",
-#       fluidRow(
-#         column(
-#           12, align = "center",
-#           h1("Player Profile"),
-#           fluidRow(
-#             league <- textOutput(outputId = "league"),
-#             uiOutput(outputId = "leagueImage"),
-#             textOutput(outputId = "basicInfo")
-#           )
-#         ),
-#       ),
-#       fluidRow(
-#         column(4,
-#                plotlyOutput(outputId = "graphRolePie")
-#         ),
-#         column(4,
-#                plotlyOutput(outputId = "graphWinratePie")
-#         ),
-#         column(4,
-#                plotlyOutput(outputId = "graphKDAPie")
-#         ),
-#         
-#       ),
-#     )
-#   ),
-#   
-#   tabPanel("Detailed Statistics",
-#            
-#            fluidRow(
-#              column(4,
-#                     selectInput("championSelect",
-#                                 "Champion:",
-#                                 c("All",
-#                                   unique(as.character(champion_constants$name))))
-#              ),
-#              column(4,
-#                     selectInput("winLossSelect",
-#                                 "Win/Loss:",
-#                                 c("All",
-#                                   "Win",
-#                                   "Loss"))
-#              )
-#            ),
-#            DT::dataTableOutput("tableChampion")
-#   ),
-# 
-#   tabPanel("Champions",
-#     fluidPage(
-#       plotlyOutput(outputId = "graphChampion")
-#     )    
-#   ),
-#   
-#   tabPanel("Time",
-#     fluidPage(
-#       plotlyOutput(outputId = "graphTime")
-#     )    
-#   )
-# )
-
-
-
-
-ui <- material_page(title = "LoL Stats", fluid = TRUE,
+ui <- material_page(title = "LoL Stats",
+                    fluid = TRUE,
+                    primary_theme_color = "rgba(56, 119, 175, 1)",
+                    secondary_theme_color = "rgba(56, 119, 175, 1)",
    material_side_nav(
      fixed = FALSE,
      fluidRow(
@@ -117,42 +27,57 @@ ui <- material_page(title = "LoL Stats", fluid = TRUE,
               "Detailed Statistics" = "tableStats",
               "Champions" = "champGraph",
               "Time" = "timeGraph",
-              "Win/Loss" = "winLossGraph")
+              "Win/Loss" = "winLossGraph",
+              "Trends" = "timeStatsGraph")
    ),
+   
    material_tab_content(tab_id = "account",
+            column(1),
+            
             column(
-              4, align = "center",
+              3, align = "center", div(style = "height:20px"),
               fluidRow(
-                h4("Account Info"),
-                textInput(
-                  inputId = "accountName",
-                  label = "Account Name:",
-                  placeholder = "Account Name"),
-                
-                selectInput("region", "Region:",
-                            c("NA" = "na1",
-                              "EUW" = "euw1",
-                              "KR" = "kr")
+                h5("Account Info"),
+                material_text_box(
+                  input_id = "accountName",
+                  label = "Account Name"),
+              ),
+              
+              fluidRow(
+                material_dropdown("region",
+                                  "Region",
+                                  choices =
+                                     c("NA" = "na1",
+                                       "EUW" = "euw1",
+                                       "KR" = "kr")
                 ),
+              ),
                 
-                sliderInput("numGames", "Number of Matches to Query:",
-                            min = 1,
-                            max = 100,
-                            value = 50,
-                            step =1),
-                
+             fluidRow(
+                material_slider(
+                   input_id = "numGames",
+                   label = "Number of Matches to Query:",
+                   min_value = 1,
+                   max_value = 100,
+                   initial_value = 50,
+                   step_size = 1
+                ),
+             ),
+             
+             fluidRow(
                 actionButton(
                   inputId = "submit_loc",
                   label = "Get stats")
-              )
+             )
+              
             ),
             
             column(
-              8, align = "center",
+              7, align = "center", div(style = "height:20px"),
               fluidRow(
                 column(
                   12, align = "center",
-                  h4("Player Profile"),
+                  h5("Basic Stats"),
                   fluidRow(
                     league <- textOutput(outputId = "league"),
                     uiOutput(outputId = "leagueImage"),
@@ -172,19 +97,20 @@ ui <- material_page(title = "LoL Stats", fluid = TRUE,
                 ),
                 
               ),
-            )
+            ),
+            column(1),
+            
    ),
    
    material_tab_content(tab_id = "tableStats",
-            
             fluidRow(
-              column(4,
+              column(6, align = "center", div(style = "height:20px"),
                      selectInput("championSelect",
                                  "Champion:",
                                  c("All",
                                    unique(as.character(champion_constants$name))))
               ),
-              column(4,
+              column(6, align = "center", div(style = "height:20px"),
                      selectInput("winLossSelect",
                                  "Win/Loss:",
                                  c("All",
@@ -192,39 +118,93 @@ ui <- material_page(title = "LoL Stats", fluid = TRUE,
                                    "Loss"))
               )
             ),
-            DT::dataTableOutput("tableChampion")
+            fluidRow(
+               column(1),
+               column(10, align = "center", div(style = "height:20px"),
+                      DT::dataTableOutput("tableChampion")
+                      ),
+               column(1)
+            )
    ),
    
    material_tab_content(tab_id = "champGraph",
-            fluidPage(
-              plotlyOutput(outputId = "graphChampion")
-            )    
+            column(12, div(style = "height:20px"),
+                   plotlyOutput(outputId = "graphChampion")
+            )
    ),
    
    material_tab_content(tab_id = "timeGraph",
-            fluidPage(
-              plotlyOutput(outputId = "graphTime")
-            )    
+            column(12, div(style = "height:20px"),
+                   plotlyOutput(outputId = "graphTime")
+            )
    ),
    
    material_tab_content(tab_id = "winLossGraph",
       fluidPage(
          column(
-            3, align = "center",
+            3, align = "center", div(style = "height:20px"),
             plotlyOutput(outputId = "graphWinKDA")
          ),
          column(
-            3, align = "center",
+            3, align = "center", div(style = "height:20px"),
             plotlyOutput(outputId = "graphWinDmg")
          ),
          column(
-            3, align = "center",
+            3, align = "center", div(style = "height:20px"),
             plotlyOutput(outputId = "graphWinGold")
          ),
          column(
-            3, align = "center",
+            3, align = "center", div(style = "height:20px"),
             plotlyOutput(outputId = "graphWinCS")
          ),
+      )    
+   ),
+   
+   material_tab_content(tab_id = "timeStatsGraph",
+      fluidPage(
+         fluidRow(
+            column(6, align = "center", div(style = "height:20px"),
+                   selectInput(
+                      "timeGraphXData", "Choose an x variable",
+                      choices = c(
+                         "Game Number" = "gameNum",
+                         "Date" = "date"
+                      )    
+                   ),
+                   
+            ),
+            column(6, align = "center", div(style = "height:20px"),
+                   selectInput(
+                      "timeGraphYData", "Choose a variable",
+                      choices = c(
+                         "Kills" = "kills",
+                         "Deaths" = "deaths",
+                         "Assists" = "assists",
+                         "Total Damage" = "totalDamageDealt",
+                         "Magic Damage" = "magicDamageDealt",
+                         "Physical Damage" = "physicalDamageDealt",
+                         "True Damage" = "trueDamageDealt",
+                         "Champion Damage" = "totalDamageDealtToChampions",
+                         "Objective Damage" = "damageDealtToObjectives",
+                         "Tower Damage" = "damageDealtToTurrets",
+                         "Damage Taken" = "totalDamageTaken",
+                         "Gold Earned" = "goldEarned",
+                         "Tower Kills" = "turretKills",
+                         "CS" = "totalCreepScore",
+                         "Vision Score" = "visionScore"
+                      )    
+                   ),
+                   
+            ),
+         ),
+         
+         fluidRow(
+            column(1),
+            column(10,  div(style = "height:90%"),
+                   plotlyOutput(outputId = "graphTimeStats")
+            ),
+            column(1)
+         )
       )    
    )
 )

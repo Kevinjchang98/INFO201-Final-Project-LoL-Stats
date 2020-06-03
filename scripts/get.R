@@ -137,7 +137,7 @@ get_recent_match_data <- function(gameChampId, apiKey) {
     
     #gameChampId <- head(gameChampId, n = 20)
     for (game in gameChampId) {
-      Sys.sleep(0.5)
+      Sys.sleep(0.05)
       n <- n + 1
       m <- m + 1
       if ((n - 1) %% 10 == 0 && n > 5) {

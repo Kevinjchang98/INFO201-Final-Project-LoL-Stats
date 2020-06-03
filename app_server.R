@@ -2,6 +2,8 @@ server <- function(input, output){
   start_time <- Sys.time() # Record time after initial requests made
   message(paste0("Initial Data Retrieved at ", start_time))
   
+  
+  
   # When button pressed by user
   observeEvent(
     eventExpr = input[["submit_loc"]],
@@ -43,7 +45,7 @@ server <- function(input, output){
       # initial requests and button press, allowing for 100 matches to be gotten.
       # TODO: Maybe make condition where this only happens if above 90 matches requested
       # as it seems like anything under 90 always works?
-      debugWaitTime <- 5
+      debugWaitTime <- 2
       
       if((request_time - start_time) > debugWaitTime) {
         source("app_data.R")
@@ -84,7 +86,25 @@ server <- function(input, output){
         output$graphWinGold <- renderPlotly(graph_winrate_gold_plotly(win_summary))
         incProgress(amount = 1/numGraphs, detail = "CS")
         output$graphWinCS <- renderPlotly(graph_winrate_cs_plotly(win_summary))
-        
+      })
+      
+      output$graphTimeStats <- renderPlotly({
+        if (input$timeGraphXData == "date") {
+          return_graph <- graph_time_stats_plotly(recent_match_data[[input$timeGraphXData]],
+                                                  recent_match_data[[input$timeGraphYData]],
+                                                  recent_match_data$win,
+                                                  input$timeGraphXData,
+                                                  input$timeGraphYData,
+                                                  FALSE)
+        } else {
+          return_graph <- graph_time_stats_plotly(recent_match_data[[input$timeGraphXData]],
+                                                  recent_match_data[[input$timeGraphYData]],
+                                                  recent_match_data$win,
+                                                  input$timeGraphXData,
+                                                  input$timeGraphYData,
+                                                  TRUE)
+        }
+        return_graph
       })
       
       # Create champion summary table
