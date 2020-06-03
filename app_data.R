@@ -30,100 +30,110 @@ Sys.sleep(1)
 
 recent_match_data$gameChampId <- match_summary$gameChampId[1:nrow(recent_match_data)]
 
-match_summary <<- left_join(match_summary, recent_match_data) %>%
-  mutate(winInt = as.integer(as.logical(win)),
-         timeLong = anytime(timestamp / 1000),
-         date = as.Date(timeLong),
-         time = format(timeLong, "%H:%M:%S"),
-         hour = as.numeric(format(
-           strptime(match_summary$time, "%H:%M:%S"), "%H"))
-  ) %>%
-  dplyr::rename(key = champion)
+withProgress(message = "Analyzing Data: ", value = 0, {
+  numSteps <- 5
+  incProgress(amount = 1/numSteps, detail = "Match Summary")
+  match_summary <<- left_join(match_summary, recent_match_data) %>%
+    mutate(winInt = as.integer(as.logical(win)),
+           timeLong = anytime(timestamp / 1000),
+           date = as.Date(timeLong),
+           time = format(timeLong, "%H:%M:%S"),
+           hour = as.numeric(format(
+             strptime(match_summary$time, "%H:%M:%S"), "%H"))
+    ) %>%
+    dplyr::rename(key = champion)
+  
+  incProgress(amount = 1/numSteps, detail = "Match Summary")
+  match_summary <<- match_summary %>%
+    mutate(hour = as.numeric(format(
+      strptime(match_summary$time, "%H:%M:%S"), "%H")))
+  Sys.sleep(1)
+  
+  incProgress(amount = 1/numSteps, detail = "Champion Summary")
+  # Data per champion played
+  champion_summary <<- data.frame()
+  champion_summary <<- match_summary %>%
+    left_join(champion_constants %>%
+                select(key, name)) %>%
+    group_by(name, winInt) %>%
+    dplyr::summarize(freq = dplyr::n(),
+                     avgKills = mean(kills),
+                     avgDeaths = mean(deaths),
+                     avgAssists = mean(assists),
+                     avgKDA = (avgKills + avgAssists) / avgDeaths,
+                     avgTotDmg = mean(totalDamageDealt),
+                     avgVisionScore = mean(visionScore),
+                     avgGoldEarned = mean(goldEarned),
+                     avgCS = mean(totalMinionsKilled + neutralMinionsKilled))
+  
+  incProgress(amount = 1/numSteps, detail = "Win Summary")
+  # Data based on win/loss
+  win_summary <<- match_summary %>%
+    group_by(winInt) %>%
+    dplyr::summarize(freq = dplyr::n(),
+                     avgKills = mean(kills),
+                     avgDeaths = mean(deaths),
+                     avgAssists = mean(assists),
+                     avgKDA = (avgKills + avgAssists) / avgDeaths,
+                     avgTotDmg = mean(totalDamageDealt),
+                     avgVisionScore = mean(visionScore),
+                     avgGoldEarned = mean(goldEarned),
+                     avgCS = mean(totalMinionsKilled + neutralMinionsKilled),
+                     sigmaKills = sd(kills),
+                     sigmaDeaths = sd(deaths),
+                     sigmaAssists = sd(assists),
+                     sigmaKDA = sqrt(
+                       (sqrt(sigmaKills^2 + sigmaAssists^2) /
+                          (avgAssists + avgKills))^2 +
+                         (sigmaDeaths / avgDeaths)^2),
+                     sigmaTotDmg = sd(totalDamageDealt),
+                     sigmaVisionScore = sd(visionScore),
+                     sigmaGoldEarned = sd(goldEarned),
+                     sigmaCS = sqrt(sd(totalMinionsKilled)^2 +
+                                      sd(neutralMinionsKilled)^2)
+    ) %>%
+    mutate(win = ifelse(
+      winInt == 1,
+      "Win",
+      "Loss"))
+  
+  incProgress(amount = 1/numSteps, detail = "Time Summary")
+  # Data based on time of day
+  time_summary <<- match_summary %>%
+    group_by(hour, winInt) %>%
+    dplyr::summarize(freq = dplyr::n(),
+                     avgKills = mean(kills),
+                     avgDeaths = mean(deaths),
+                     avgAssists = mean(assists),
+                     avgKDA = (avgKills + avgAssists) /
+                       avgDeaths,
+                     avgTotDmg = mean(totalDamageDealt),
+                     avgVisionScore = mean(visionScore),
+                     avgGoldEarned = mean(goldEarned),
+                     avgCS = mean(totalMinionsKilled +
+                                    neutralMinionsKilled),
+                     sigmaKills = sd(kills),
+                     sigmaDeaths = sd(deaths),
+                     sigmaAssists = sd(assists),
+                     sigmaKDA = sqrt(
+                       (sqrt(sigmaKills^2 + sigmaAssists^2) /
+                          (avgAssists + avgKills))^2 +
+                         (sigmaDeaths / avgDeaths)^2),
+                     sigmaTotDmg = sd(totalDamageDealt),
+                     sigmaVisionScore = sd(visionScore),
+                     sigmaGoldEarned = sd(goldEarned),
+                     sigmaCS = sqrt(sd(totalMinionsKilled)^2 +
+                                      sd(neutralMinionsKilled)^2)
+    ) %>%
+    mutate(win = ifelse(
+      winInt == 1,
+      "Win",
+      "Loss"))
+  
+  incProgress(amount = 1/numSteps, detail = "Winrate Data")
+  # Winrate
+  info_winrate <<- mean(match_summary$winInt)
+  
+  winrate_data <<- win_summary[1:2, 1:2]
 
-match_summary <<- match_summary %>%
-  mutate(hour = as.numeric(format(
-    strptime(match_summary$time, "%H:%M:%S"), "%H")))
-Sys.sleep(1)
-
-# Data per champion played
-champion_summary <<- data.frame()
-champion_summary <<- match_summary %>%
-  left_join(champion_constants %>%
-              select(key, name)) %>%
-  group_by(name, winInt) %>%
-  dplyr::summarize(freq = dplyr::n(),
-                   avgKills = mean(kills),
-                   avgDeaths = mean(deaths),
-                   avgAssists = mean(assists),
-                   avgKDA = (avgKills + avgAssists) / avgDeaths,
-                   avgTotDmg = mean(totalDamageDealt),
-                   avgVisionScore = mean(visionScore),
-                   avgGoldEarned = mean(goldEarned),
-                   avgCS = mean(totalMinionsKilled + neutralMinionsKilled))
-
-# Data based on win/loss
-win_summary <<- match_summary %>%
-  group_by(winInt) %>%
-  dplyr::summarize(freq = dplyr::n(),
-                   avgKills = mean(kills),
-                   avgDeaths = mean(deaths),
-                   avgAssists = mean(assists),
-                   avgKDA = (avgKills + avgAssists) / avgDeaths,
-                   avgTotDmg = mean(totalDamageDealt),
-                   avgVisionScore = mean(visionScore),
-                   avgGoldEarned = mean(goldEarned),
-                   avgCS = mean(totalMinionsKilled + neutralMinionsKilled),
-                   sigmaKills = sd(kills),
-                   sigmaDeaths = sd(deaths),
-                   sigmaAssists = sd(assists),
-                   sigmaKDA = sqrt(
-                     (sqrt(sigmaKills^2 + sigmaAssists^2) /
-                        (avgAssists + avgKills))^2 +
-                       (sigmaDeaths / avgDeaths)^2),
-                   sigmaTotDmg = sd(totalDamageDealt),
-                   sigmaVisionScore = sd(visionScore),
-                   sigmaGoldEarned = sd(goldEarned),
-                   sigmaCS = sqrt(sd(totalMinionsKilled)^2 +
-                                    sd(neutralMinionsKilled)^2)
-  ) %>%
-  mutate(win = ifelse(
-    winInt == 1,
-    "Win",
-    "Loss"))
-
-# Data based on time of day
-time_summary <<- match_summary %>%
-  group_by(hour, winInt) %>%
-  dplyr::summarize(freq = dplyr::n(),
-                   avgKills = mean(kills),
-                   avgDeaths = mean(deaths),
-                   avgAssists = mean(assists),
-                   avgKDA = (avgKills + avgAssists) /
-                     avgDeaths,
-                   avgTotDmg = mean(totalDamageDealt),
-                   avgVisionScore = mean(visionScore),
-                   avgGoldEarned = mean(goldEarned),
-                   avgCS = mean(totalMinionsKilled +
-                                  neutralMinionsKilled),
-                   sigmaKills = sd(kills),
-                   sigmaDeaths = sd(deaths),
-                   sigmaAssists = sd(assists),
-                   sigmaKDA = sqrt(
-                     (sqrt(sigmaKills^2 + sigmaAssists^2) /
-                        (avgAssists + avgKills))^2 +
-                       (sigmaDeaths / avgDeaths)^2),
-                   sigmaTotDmg = sd(totalDamageDealt),
-                   sigmaVisionScore = sd(visionScore),
-                   sigmaGoldEarned = sd(goldEarned),
-                   sigmaCS = sqrt(sd(totalMinionsKilled)^2 +
-                                    sd(neutralMinionsKilled)^2)
-  ) %>%
-  mutate(win = ifelse(
-    winInt == 1,
-    "Win",
-    "Loss"))
-
-# Winrate
-info_winrate <<- mean(match_summary$winInt)
-
-winrate_data <<- win_summary[1:2, 1:2]
+})

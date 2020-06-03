@@ -10,6 +10,7 @@ library(scales)
 library(gridExtra)
 library(anytime)
 library(DT)
+library(shinymaterial) # Styling
 
 source("./scripts/apikey.R")
 source("app_ui.R")
@@ -20,6 +21,7 @@ source("./scripts/graphTime.R")
 source("./scripts/graphWinratePie.R")
 source("./scripts/graphKDAPie.R")
 source("./scripts/graphRolePie.R")
+source("./scripts/graphWinrate.R")
 source("./scripts/summaryTable.R")
 source("./scripts/get.R")
 

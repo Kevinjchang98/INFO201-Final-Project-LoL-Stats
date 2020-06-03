@@ -46,6 +46,10 @@ graph_winrate_pie_plotly <- function(winrate) {
     layout(annotations = list(text = winrateValue,
                               "showarrow" = F,
                               font = list(size = 18)))
+  return_plot <- return_plot %>% 
+    layout(plot_bgcolor  = "rgba(0, 0, 0, 0)",
+           paper_bgcolor = "rgba(0, 0, 0, 0)",
+           fig_bgcolor   = "rgba(0, 0, 0, 0)")
 
   
   return(return_plot)

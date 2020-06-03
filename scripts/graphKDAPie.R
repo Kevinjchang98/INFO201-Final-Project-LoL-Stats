@@ -12,9 +12,9 @@ graph_kda_pie_plotly <- function(match_summary) {
   
   
   df <- data.frame("labels" = c("Kills", "Deaths", "Assists"))
-  df$freq <- c(mean(kills),
-               mean(deaths),
-               mean(assists))
+  df$freq <- c(mean(kills, na.rm = TRUE),
+               mean(deaths, na.rm = TRUE),
+               mean(assists, na.rm = TRUE))
   
   return_plot <- plot_ly(df,
                          labels = ~labels,
@@ -31,6 +31,10 @@ graph_kda_pie_plotly <- function(match_summary) {
     layout(annotations = list(text = kdaText,
                               "showarrow" = F,
                               font = list(size = 18)))
+  return_plot <- return_plot %>% 
+    layout(plot_bgcolor  = "rgba(0, 0, 0, 0)",
+           paper_bgcolor = "rgba(0, 0, 0, 0)",
+           fig_bgcolor   = "rgba(0, 0, 0, 0)")
   
   return(return_plot)
 }

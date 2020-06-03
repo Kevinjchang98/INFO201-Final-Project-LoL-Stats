@@ -33,7 +33,14 @@ graph_time_plotly <- function(time_summary) {
               name = "Losses")
   return_plot <- return_plot %>% 
     layout(yaxis = list(title = "Number of Games Played"),
+           xaxis = list(title = "Hour of Day of Game Start"),
            barmode = "stack")
+  return_plot <- return_plot %>% 
+    layout(plot_bgcolor  = "rgba(0, 0, 0, 0)",
+           paper_bgcolor = "rgba(0, 0, 0, 0)",
+           fig_bgcolor   = "rgba(0, 0, 0, 0)")
+  return_plot <- return_plot %>% 
+    config(displayModeBar = FALSE)
   
   return(return_plot)
 }

@@ -57,17 +57,35 @@ server <- function(input, output){
         })
         source("app_data.R")
       }
-      
-      # Create all output graphs
-      output$graphChampion <- renderPlotly(graph_champion_freq_plotly(champion_summary))
-      
-      output$graphTime <- renderPlotly(graph_time_plotly(time_summary))
-      
-      output$graphWinratePie <- renderPlotly(graph_winrate_pie_plotly(winrate_data))
-      
-      output$graphKDAPie <- renderPlotly(graph_kda_pie_plotly(match_summary))
-      
-      output$graphRolePie <- renderPlotly(graph_role_pie_plotly(match_summary))
+      withProgress(message = "Creating Graphs: ", value = 0, {
+        numGraphs <- 9
+        # Create all output graphs
+        
+        incProgress(amount = 1/numGraphs, detail = "Champion")
+        output$graphChampion <- renderPlotly(graph_champion_freq_plotly(champion_summary))
+        
+        incProgress(amount = 1/numGraphs, detail = "Time")
+        output$graphTime <- renderPlotly(graph_time_plotly(time_summary))
+        
+        incProgress(amount = 1/numGraphs, detail = "Winrate Pie")
+        output$graphWinratePie <- renderPlotly(graph_winrate_pie_plotly(winrate_data))
+        
+        incProgress(amount = 1/numGraphs, detail = "KDA Pie")
+        output$graphKDAPie <- renderPlotly(graph_kda_pie_plotly(match_summary))
+        
+        incProgress(amount = 1/numGraphs, detail = "Roles Pie")
+        output$graphRolePie <- renderPlotly(graph_role_pie_plotly(match_summary))
+        
+        incProgress(amount = 1/numGraphs, detail = "KDA")
+        output$graphWinKDA <- renderPlotly(graph_winrate_kda_plotly(win_summary))
+        incProgress(amount = 1/numGraphs, detail = "Damage")
+        output$graphWinDmg <- renderPlotly(graph_winrate_dmg_plotly(win_summary))
+        incProgress(amount = 1/numGraphs, detail = "Gold")
+        output$graphWinGold <- renderPlotly(graph_winrate_gold_plotly(win_summary))
+        incProgress(amount = 1/numGraphs, detail = "CS")
+        output$graphWinCS <- renderPlotly(graph_winrate_cs_plotly(win_summary))
+        
+      })
       
       # Create champion summary table
       output$tableChampion <- DT::renderDataTable(DT::datatable({
