@@ -167,7 +167,7 @@ summary <- function(name, region) {
   # Return List
   summary_list <- c(info_account_name,
                     info_rank,
-                    info_LP,
+                    info_lp,
                     info_winrate,
                     info_most_played_champion)
   

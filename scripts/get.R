@@ -34,7 +34,7 @@ get_ranked_data <- function(accountName, region, apiKey) {
     filter(queueType == "RANKED_SOLO_5x5") %>%
     select(leaguePoints) %>%
     pull()
-  
+
   return(c(name = summonerName,
            rank = soloQRank,
            LP = currentLP))
@@ -51,6 +51,7 @@ print_ranked_data <- function(accountName, region, apiKey) {
       info[["LP"]],
       " LP."
     )
+
   }, error = function(e) {
     "Could not get ranked data."
   })
@@ -85,7 +86,7 @@ get_champion_constants <- function() {
   championConstants <- GET(url)
   championConstants <- fromJSON(content(championConstants, "text"))
   championConstants <- championConstants$data
-  
+
   return(championConstants)
 }
 
