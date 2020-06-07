@@ -54,7 +54,7 @@ source(file = "./scripts/graphChampion.R")
 graph_champion_freq(champion_summary)
 ```
 
-This chart provides a quick overview of which champions the player has played in their last 100 games, as well as easy comparison of winrates between champions. This sort of data can provide useful insight into which champions might be more effective for a particular player, as well as insight into whether a player prefers to play a small number of champions, or a larger number of champions.
+This chart provides a quick overview of which champions the player has played in their last 100 games, as well as easy comparison of winrates between champions. This sort of data can provide useful insight into which champions might be more effective for a particular player, as well as insight into whether a player prefers to play a small number of champions, or a larger number of champions. The error bars are the standard deviation for the stats.
 
 For example in analyzing BoxBox's chart, one can see that he has played Riven and Fiora significantly more consistently than the others, and has a significantly positive winrate with those champions. One can also see that with champions played less often, the winrate appears to be more volatile, which makes intuitive sense when taking into account low sample size to calculate winrate, and being less practiced on those champions.
 
