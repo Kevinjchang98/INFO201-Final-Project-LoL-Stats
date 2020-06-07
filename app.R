@@ -14,7 +14,7 @@ library(broom)
 library(shinymaterial) # Styling
 
 source("./scripts/get.R")
-# Get initial data so app_ui can fill filter dropdown in table
+# Get initial data so app_ui can fill filter dropdown in table tab
 source("app_initialData.R")
 
 source("./scripts/apikey.R")

@@ -2,8 +2,6 @@ server <- function(input, output){
   start_time <- Sys.time() # Record time after initial requests made
   message(paste0("Initial Data Retrieved at ", start_time))
   
-  
-  
   # When button pressed by user
   observeEvent(
     eventExpr = input[["submit_loc"]],
