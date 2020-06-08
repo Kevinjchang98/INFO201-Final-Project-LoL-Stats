@@ -1,7 +1,7 @@
 graph_role_pie_plotly <- function(match_summary) {
-  
-  df <- match_summary %>% 
-    select(role, lane) %>% 
+
+  df <- match_summary %>%
+    select(role, lane) %>%
     mutate(position = ifelse(
       role == "SOLO",
       ifelse( # if solo
@@ -34,29 +34,29 @@ graph_role_pie_plotly <- function(match_summary) {
           )
         )
       )
-    )) %>% 
-    group_by(position) %>% 
+    )) %>%
+    group_by(position) %>%
     summarize(freq = n())
-  
+
   return_plot <- plot_ly(df,
                          labels = ~position,
                          values = ~freq)
-  return_plot <- return_plot %>% 
+  return_plot <- return_plot %>%
     add_pie(hole = 0.6)
-  return_plot <- return_plot %>% 
+  return_plot <- return_plot %>%
     layout(showlegend = F,
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-  return_plot <- return_plot %>% 
+  return_plot <- return_plot %>%
     config(displayModeBar = FALSE)
-  return_plot <- return_plot %>% 
+  return_plot <- return_plot %>%
     layout(annotations = list(text = "Roles",
                               "showarrow" = F,
                               font = list(size = 18)))
-  return_plot <- return_plot %>% 
+  return_plot <- return_plot %>%
     layout(plot_bgcolor  = "rgba(0, 0, 0, 0)",
            paper_bgcolor = "rgba(0, 0, 0, 0)",
            fig_bgcolor   = "rgba(0, 0, 0, 0)")
-  
+
   return(return_plot)
 }

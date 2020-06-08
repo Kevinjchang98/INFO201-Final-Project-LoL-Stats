@@ -19,7 +19,7 @@ ui <- material_page(title = "LoL Stats",
        ),
        column(1)
      )
-   ), 
+   ),
    material_tabs(
      tabs = c("Account" = "account",
               "Detailed Statistics" = "tableStats",
@@ -29,10 +29,10 @@ ui <- material_page(title = "LoL Stats",
               "Trends" = "timeStatsGraph",
               "Summary" = "summary")
    ),
-   
+
    material_tab_content(tab_id = "account",
             column(1),
-            
+
             column(
               3, align = "center", div(style = "height:20px"),
               fluidRow(
@@ -41,7 +41,7 @@ ui <- material_page(title = "LoL Stats",
                   input_id = "accountName",
                   label = "Account Name"),
               ),
-              
+
               fluidRow(
                 material_dropdown("region",
                                   "Region",
@@ -51,7 +51,7 @@ ui <- material_page(title = "LoL Stats",
                                        "KR" = "kr")
                 ),
               ),
-                
+
              fluidRow(
                 material_slider(
                    input_id = "numGames",
@@ -62,33 +62,33 @@ ui <- material_page(title = "LoL Stats",
                    step_size = 1
                 ),
              ),
-             
+
              fluidRow(
                 actionButton(
                   inputId = "submit_loc",
                   label = "Get stats")
              ),
             ),
-            
+
             column(
               7, align = "center", div(style = "height:20px"),
-              
+
               conditionalPanel(
                  condition = ("input.submit_loc == 0"),
-                 
+
                  column(1),
                  column(10,
                     h5("Introduction"),
-                    
+
                     p("This final project for INFO 201 allows players to enter their player name and receive statistics from their recent games. One can request up to 100 recent games, and receive detailed numbers split into the games won and lost for each champion, a graph of which champions they've played recently and their winrates, when they've played their games throughout the day, comparison of a few key statistics between games lost and won, as well as investigate various trends in factors such as CS, or damage dealt over time in their recent games played."),
-                    
+
                     p("All data comes from the Riot API, and is all player-specific."),
-                    
+
                     p("Enter your information to the left and click get stats to get started. Or for some example data, try \"Dyrus\", or \"BoxBox\"")
                  ),
                  column(1)
               ),
-              
+
               conditionalPanel(
                  condition = ("input.submit_loc == 1"),
                 column(
@@ -111,13 +111,13 @@ ui <- material_page(title = "LoL Stats",
                 column(4,
                        plotlyOutput(outputId = "graphKDAPie")
                 ),
-                
+
               ),
             ),
             column(1),
-            
+
    ),
-   
+
    material_tab_content(tab_id = "tableStats",
             fluidRow(
               column(6, align = "center", div(style = "height:20px"),
@@ -141,7 +141,7 @@ ui <- material_page(title = "LoL Stats",
                       ),
                column(1)
             ),
-            
+
             fluidRow(
                column(1),
                column(10,
@@ -151,12 +151,12 @@ ui <- material_page(title = "LoL Stats",
                column(1)
             )
    ),
-   
+
    material_tab_content(tab_id = "champGraph",
             column(12, div(style = "height:20px"),
                    plotlyOutput(outputId = "graphChampion")
             ),
-            
+
             fluidRow(
                column(1),
                column(10,
@@ -166,12 +166,12 @@ ui <- material_page(title = "LoL Stats",
                column(1)
             )
    ),
-   
+
    material_tab_content(tab_id = "timeGraph",
             column(12, div(style = "height:20px"),
                    plotlyOutput(outputId = "graphTime")
             ),
-            
+
             fluidRow(
                column(1),
                column(10,
@@ -181,7 +181,7 @@ ui <- material_page(title = "LoL Stats",
                column(1)
             )
    ),
-   
+
    material_tab_content(tab_id = "winLossGraph",
       fluidPage(
          column(
@@ -201,7 +201,7 @@ ui <- material_page(title = "LoL Stats",
             plotlyOutput(outputId = "graphWinCS")
          ),
       ),
-      
+
       fluidRow(
          column(1),
          column(10,
@@ -211,7 +211,7 @@ ui <- material_page(title = "LoL Stats",
          column(1)
       )
    ),
-   
+
    material_tab_content(tab_id = "timeStatsGraph",
       fluidPage(
          fluidRow(
@@ -221,9 +221,9 @@ ui <- material_page(title = "LoL Stats",
                       choices = c(
                          "Game Number" = "gameNum",
                          "Date" = "date"
-                      )    
+                      )
                    ),
-                   
+
             ),
             column(6, align = "center", div(style = "height:20px"),
                    selectInput(
@@ -244,12 +244,12 @@ ui <- material_page(title = "LoL Stats",
                          "Tower Kills" = "turretKills",
                          "CS" = "totalCreepScore",
                          "Vision Score" = "visionScore"
-                      )    
+                      )
                    ),
-                   
+
             ),
          ),
-         
+
          fluidRow(
             column(1),
             column(10,  div(style = "height:90%"),
@@ -267,45 +267,45 @@ ui <- material_page(title = "LoL Stats",
          column(1)
       )
    ),
-   
+
    material_tab_content(tab_id = "summary",
       column(1),
       column(10,
           h3("Main Takeaways - INFO 201"),
-          
+
           p("It is generally pretty hard to be able to generalize statistics that appear consisitent amongst the entire playerbase of League of Legends without doing a more meta analysis. Thus, some example takeaways for specific sets of data from public figures are provided below."),
-          
+
           h4("Specific Data"),
-          
+
           h5("Dyrus Player Statistics"),
-          
+
           p("As of June 6, 2020, looking at the most recent 50 games played, it appears that Dyrus is a relatively high-ranked Top-lane player. He's got a relatively high winrate of 60%, and plays a very narrow set of characters consistently (basically only Tryndamere), though he's played a variety fo champions at least once. He mostly plays in the evening, with no hour of the day having an unusual winrate. His Average KDA as calculated on the Win/Loss tab has a large difference between games lost and won. The average total damage dealt as well as average CS is slightly higher in the games he lost than won, likely due to the games he ended up losing consisting of Dyrus being at a disadvantageous position and being more unable to end the game. Thus, these longer games would lead to higher total damage and higher CS in contrast to games where he may have gotten an early lead, and thus was able to win relatively quickly. Average gold obtained appears to be roughly the same in between lost and won games."),
-          
+
           h5("BoxBox Player Statistics"),
-          
+
           p("As of June 6, 2020, looking at the most recent 50 games played, BoxBox's stats should be comparable to Dyrus as they're both relatively high-ranked Top-lane players. BoxBox has a slightly negative winrate at 44%, and has played a much narrower set of champions. However, he's played an almost equal amount of Fiora and Riven, as opposed to only Tryndamere with Dyrus. He also has a single Gaussian distribution for time of game start, centered around 2:00 to 3:00 AM, as opposed to Dyrus having some more outlier games throughout the day. The stats in the Win/Loss tab is relatively consistent, with KDA having a large disparity between lost and won games, and the rest three being roughly equal when taking into account random statistical error. More in-depth analysis of BoxBox was performed in the Midpoint Deliverable."),
-          
+
           h4("Notable Data-Insights or Patterns"),
-          
+
           p("While looking at Dyrus and BoxBox's data, several possible common trends may be gathered, though further, more thorough analysis should be performed to be able to actually support or disprove these."),
-          
+
           h5("Win/Loss Trends"),
-          
+
           p("It appears that KDA is the largest factor that was analyzed that varies between games won and lost. This makes intuitive sense for players at a higher level, as gameplay elements against the computer such as amount of CS gained while in lane shouldn't vary as much as the human to human interactions between enemy laners. Furthermore, higher level players should be able to capitalize on any early kills or deaths, converting the single kill or death into an advantage which would lead to more kills or deaths, and thus winning or losing the game. This suggests that the largest gap between skill ceiling and player skill may be in player to player interactions, rather than factors such as being able to get perfect or near-perfect CS for higher level players. This is further supported by CS and gold earned being relatively consistent between games won and lost."),
           h5("Time of Day Trends"),
-          
+
           p("It appears that there is no significant correlation between time of game start and game performance, though this is a very loose conclusion based upon very few data points (players). This is also a very personal stat, and so one expects that for some players, there may be a time of day that is optimal, and provides a significantly better winrate than other times of day."),
           h4("Broader Implications"),
-          
+
           h5("Importance of Human Elements"),
           p("With the statistics provided in the Win/Loss area, this may suggest that more \"human\" elements may be playing a larger deciding factor in how games go rather than other factors. i.e., In contrast to sports such as university-level Formula SAE, where, arguably, engineering of the vehicle plays a large deciding factor in who wins or loses rather than the individual decisions and skills of the driver, League of Legends appears to have players' decision-making and interactions with the enemy team be a larger deciding factor in game outcome, at least in higher levels."),
-          
+
           p("It is also suggested that lower-level players have the opposite problem, where losing CS, which is an action the player takes against the computer rather than the enemy players directly, may be a larger factor in whether they win or lose games. This may be apparent in Win/Loss trends if, for example, the average CS in games lost would be much lower than in the games won, suggesting a possible causational relationship. Further meta-analysis across players would be needed to draw any strong conclusions, however."),
-          
+
           p("Thus, one may draw a parallel between League of Legends and sports such as Olympic fencing, tennis, etc., where player to player interactions and decision making may make more of an impact rather than pure refinement of mechanics, since, at the highest level, everyone has arguably near-perfect technique. And similarly with LoL and sports such as fencing or tennis, at lower levels, it may benefit players more to focus more on the basics such as CS in League or footwork in fencing rather than higher-level decision making and mind-games."),
-          
+
           h5("Narrow Champion/Role Selection"),
-          
+
           p("As exhibited with Dyrus and BoxBox's Champions and Role Summary information, it appears that they both play a relatively narrow set of champions, with Dyrus recently focusing on Tryndamere and BoxBox on Riven and Fiora out of the 100+ available champions. This suggests that it may benefit players looking to reach higher levels of play to try and focus on a singular role, and perhaps a narrow subset of the champions fit for that role depending on current metagame status.")
        ),
       column(1)
