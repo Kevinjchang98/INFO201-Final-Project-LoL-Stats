@@ -27,7 +27,8 @@ recent_match_data <<- get_recent_match_data(match_summary$gameChampId)
 
 Sys.sleep(1)
 
-recent_match_data$gameChampId <- match_summary$gameChampId[1:nrow(recent_match_data)]
+recent_match_data$gameChampId <-
+  match_summary$gameChampId[1:nrow(recent_match_data)]
 
 withProgress(message = "Analyzing Data: ", value = 0, {
   numSteps <- 5
@@ -134,9 +135,12 @@ withProgress(message = "Analyzing Data: ", value = 0, {
   incProgress(amount = 1 / numSteps, detail = "Winrate Data")
 
   # Add data for timeStatsGraph
-  recent_match_data$date <- match_summary$date[1:nrow(recent_match_data)]
-  recent_match_data$totalCreepScore <- match_summary$totalCreepScore[1:nrow(recent_match_data)]
-  recent_match_data$gameNum <- nrow(recent_match_data) - as.numeric(rownames(recent_match_data)) + 1
+  recent_match_data$date <-
+    match_summary$date[1:nrow(recent_match_data)]
+  recent_match_data$totalCreepScore <-
+    match_summary$totalCreepScore[1:nrow(recent_match_data)]
+  recent_match_data$gameNum <-
+    nrow(recent_match_data) - as.numeric(rownames(recent_match_data)) + 1
 
   # Winrate
   info_winrate <<- mean(match_summary$winInt)

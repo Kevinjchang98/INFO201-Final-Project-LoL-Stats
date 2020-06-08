@@ -45,8 +45,12 @@ graph_role_pie_plotly <- function(match_summary) {
     add_pie(hole = 0.6)
   return_plot <- return_plot %>%
     layout(showlegend = F,
-           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+           xaxis = list(showgrid = FALSE,
+                        zeroline = FALSE,
+                        showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE,
+                        zeroline = FALSE,
+                        showticklabels = FALSE))
   return_plot <- return_plot %>%
     config(displayModeBar = FALSE)
   return_plot <- return_plot %>%
