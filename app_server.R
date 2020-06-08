@@ -1,4 +1,4 @@
-server <- function(input, output){
+server <- function(input, output) {
   start_time <- Sys.time() # Record time after initial requests made
   message(paste0("Initial Data Retrieved at ", start_time))
 
@@ -16,13 +16,13 @@ server <- function(input, output){
         rankedInfoString
       })
 
-      if(rankedInfoString != "Could not get ranked data.") {
+      if (rankedInfoString != "Could not get ranked data.") {
 
         # Get path to ranked league icon
         leagueString <- strsplit(rankedInfoString, " ")[[1]][5]
-        leagueString <- paste(toupper(substring(leagueString, 1,1)),
+        leagueString <- paste(toupper(substring(leagueString, 1, 1)),
                               substring(leagueString, 2),
-                              sep="", collapse=" ")
+                              sep = "", collapse = " ")
         leagueString <- paste0("Emblem_",
                                leagueString,
                                ".png")
@@ -45,13 +45,13 @@ server <- function(input, output){
       # as it seems like anything under 90 always works?
       debugWaitTime <- 2
 
-      if((request_time - start_time) > debugWaitTime) {
+      if ((request_time - start_time) > debugWaitTime) {
         source("app_data.R")
       } else {
         withProgress(message = "Rate limit", value = 0, {
           wait_time <- as.numeric(round((debugWaitTime - (request_time - start_time)), digits = 0))
-          for(n in 1:wait_time) {
-            incProgress(amount = 1/wait_time, detail = paste0("Waiting for ", wait_time - n, " more seconds"))
+          for (n in 1:wait_time) {
+            incProgress(amount = 1 / wait_time, detail = paste0("Waiting for ", wait_time - n, " more seconds"))
             Sys.sleep(1)
           }
         })
@@ -61,28 +61,28 @@ server <- function(input, output){
         numGraphs <- 9
         # Create all output graphs
 
-        incProgress(amount = 1/numGraphs, detail = "Champion")
+        incProgress(amount = 1 / numGraphs, detail = "Champion")
         output$graphChampion <- renderPlotly(graph_champion_freq_plotly(champion_summary))
 
-        incProgress(amount = 1/numGraphs, detail = "Time")
+        incProgress(amount = 1 / numGraphs, detail = "Time")
         output$graphTime <- renderPlotly(graph_time_plotly(time_summary))
 
-        incProgress(amount = 1/numGraphs, detail = "Winrate Pie")
+        incProgress(amount = 1 / numGraphs, detail = "Winrate Pie")
         output$graphWinratePie <- renderPlotly(graph_winrate_pie_plotly(winrate_data))
 
-        incProgress(amount = 1/numGraphs, detail = "KDA Pie")
+        incProgress(amount = 1 / numGraphs, detail = "KDA Pie")
         output$graphKDAPie <- renderPlotly(graph_kda_pie_plotly(match_summary))
 
-        incProgress(amount = 1/numGraphs, detail = "Roles Pie")
+        incProgress(amount = 1 / numGraphs, detail = "Roles Pie")
         output$graphRolePie <- renderPlotly(graph_role_pie_plotly(match_summary))
 
-        incProgress(amount = 1/numGraphs, detail = "KDA")
+        incProgress(amount = 1 / numGraphs, detail = "KDA")
         output$graphWinKDA <- renderPlotly(graph_winrate_kda_plotly(win_summary))
-        incProgress(amount = 1/numGraphs, detail = "Damage")
+        incProgress(amount = 1 / numGraphs, detail = "Damage")
         output$graphWinDmg <- renderPlotly(graph_winrate_dmg_plotly(win_summary))
-        incProgress(amount = 1/numGraphs, detail = "Gold")
+        incProgress(amount = 1 / numGraphs, detail = "Gold")
         output$graphWinGold <- renderPlotly(graph_winrate_gold_plotly(win_summary))
-        incProgress(amount = 1/numGraphs, detail = "CS")
+        incProgress(amount = 1 / numGraphs, detail = "CS")
         output$graphWinCS <- renderPlotly(graph_winrate_cs_plotly(win_summary))
       })
 

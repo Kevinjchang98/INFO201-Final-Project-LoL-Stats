@@ -7,7 +7,7 @@ graph_kda_pie_plotly <- function(match_summary) {
     "/",
     round(mean(deaths, na.rm = TRUE), 0),
     "/",
-    round(mean(assists, na.rm = TRUE),0)
+    round(mean(assists, na.rm = TRUE), 0)
   )
 
 

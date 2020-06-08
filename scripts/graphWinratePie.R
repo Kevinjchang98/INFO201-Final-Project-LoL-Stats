@@ -54,4 +54,3 @@ graph_winrate_pie_plotly <- function(winrate) {
 
   return(return_plot)
 }
-

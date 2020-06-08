@@ -136,18 +136,13 @@ get_recent_match_data <- function(gameChampId, apiKey) {
     m <- 0
     return_df <- data.frame()
 
-    #gameChampId <- head(gameChampId, n = 20)
     for (game in gameChampId) {
       Sys.sleep(0.05)
       n <- n + 1
       m <- m + 1
-      if ((n - 1) %% 10 == 0 && n > 5) {
-        #message("Waiting 2 seconds for rate limit.")
-        #Sys.sleep(2)
-      }
 
       message(paste0("Getting stats for match ", game, "; match no ", n))
-      incProgress(amount = 1/numGames, detail = n)
+      incProgress(amount = 1 / numGames, detail = n)
 
       new_match_data <- get_single_match_data_gameChampId(game, apikey)
       if (n == 1) {
@@ -160,7 +155,6 @@ get_recent_match_data <- function(gameChampId, apiKey) {
             subset(return_df, select = common_cols),
             subset(new_match_data, select = common_cols)
           )
-          #return_df$gameChampId[n] <- gameChampId[n]
         }, error = function(e) {
           message(paste0("Couldn't get match ", n))
           m <- m - 1

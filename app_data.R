@@ -31,7 +31,7 @@ recent_match_data$gameChampId <- match_summary$gameChampId[1:nrow(recent_match_d
 
 withProgress(message = "Analyzing Data: ", value = 0, {
   numSteps <- 5
-  incProgress(amount = 1/numSteps, detail = "Match Summary")
+  incProgress(amount = 1 / numSteps, detail = "Match Summary")
   match_summary <<- left_join(match_summary, recent_match_data) %>%
     mutate(winInt = as.integer(as.logical(win)),
            timeLong = anytime(timestamp / 1000),
@@ -43,14 +43,14 @@ withProgress(message = "Analyzing Data: ", value = 0, {
     ) %>%
     dplyr::rename(key = champion)
 
-  incProgress(amount = 1/numSteps, detail = "Match Summary")
+  incProgress(amount = 1 / numSteps, detail = "Match Summary")
   match_summary <<- match_summary %>%
     mutate(hour = as.numeric(format(
       strptime(match_summary$time, "%H:%M:%S"), "%H")))
   Sys.sleep(1)
 
 
-  incProgress(amount = 1/numSteps, detail = "Champion Summary")
+  incProgress(amount = 1 / numSteps, detail = "Champion Summary")
   # Data per champion played
   champion_summary <<- data.frame()
   champion_summary <<- match_summary %>%
@@ -67,7 +67,7 @@ withProgress(message = "Analyzing Data: ", value = 0, {
                      avgGoldEarned = mean(goldEarned),
                      avgCS = mean(totalMinionsKilled + neutralMinionsKilled))
 
-  incProgress(amount = 1/numSteps, detail = "Win Summary")
+  incProgress(amount = 1 / numSteps, detail = "Win Summary")
   # Data based on win/loss
   win_summary <<- match_summary %>%
     group_by(winInt) %>%
@@ -98,7 +98,7 @@ withProgress(message = "Analyzing Data: ", value = 0, {
       "Win",
       "Loss"))
 
-  incProgress(amount = 1/numSteps, detail = "Time Summary")
+  incProgress(amount = 1 / numSteps, detail = "Time Summary")
   # Data based on time of day
   time_summary <<- match_summary %>%
     group_by(hour, winInt) %>%
@@ -131,7 +131,7 @@ withProgress(message = "Analyzing Data: ", value = 0, {
       "Win",
       "Loss"))
 
-  incProgress(amount = 1/numSteps, detail = "Winrate Data")
+  incProgress(amount = 1 / numSteps, detail = "Winrate Data")
 
   # Add data for timeStatsGraph
   recent_match_data$date <- match_summary$date[1:nrow(recent_match_data)]

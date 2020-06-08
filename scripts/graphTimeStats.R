@@ -24,7 +24,6 @@ graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, i
                              showlegend = FALSE)
 
   if (includeFit) {
-    message('yes')
     m <- loess(yData ~ xData, data = df)
 
     return_plot <- add_lines(return_plot,
@@ -37,8 +36,8 @@ graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, i
                                data = augment(m),
                                ymin = ~.fitted - 1.96 * .se.fit,
                                ymax = ~.fitted + 1.96 * .se.fit,
-                               line = list(color = 'rgba(56, 119, 175, 0.1)'),
-                               fillcolor = 'rgba(56, 119, 175, 0.2)',
+                               line = list(color = "rgba(56, 119, 175, 0.1)"),
+                               fillcolor = "rgba(56, 119, 175, 0.2)",
                                name = "Standard Error Bounds",
                                showlegend = FALSE
     )
@@ -78,4 +77,3 @@ graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, i
 
   return(return_plot)
 }
-
