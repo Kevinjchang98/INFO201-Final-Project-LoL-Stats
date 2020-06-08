@@ -1,4 +1,5 @@
-graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, includeFit) {
+graph_time_stats_plotly <-
+  function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, includeFit) {
   df <- data.frame(xData = xDataIn,
                    yData = yDataIn,
                    win = winIn,
@@ -28,7 +29,7 @@ graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, i
 
     return_plot <- add_lines(return_plot,
                              y = ~fitted(loess(yData ~ xData)),
-                             line = list(color = 'rgba(241, 133, 54, 0.9)'),
+                             line = list(color = "rgba(241, 133, 54, 0.9)"),
                              name = "Loess Curve Fit",
                              showlegend = FALSE)
 

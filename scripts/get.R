@@ -128,7 +128,8 @@ get_single_match_data_gameChampId <- function(gameChampId, apiKey) {
   })
 }
 
-#TODO: Off by one error if a middle request is missing. e.g., if match 60 is missing,
+# TODO: Off by one error if a middle request is missing.
+# e.g., if match 60 is missing,
 # it thinks match 61 is match 60 for stats, throwing off everything
 get_recent_match_data <- function(gameChampId, apiKey) {
   withProgress(message = "Retrieving stats for match #", value = 0, {
