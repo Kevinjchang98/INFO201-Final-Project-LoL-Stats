@@ -61,7 +61,7 @@ ui <- material_page(title = "LoL Stats",
                 material_slider(
                    input_id = "numGames",
                    label = "Number of Matches to Query:",
-                   min_value = 1,
+                   min_value = 5,
                    max_value = 100,
                    initial_value = 50,
                    step_size = 1
