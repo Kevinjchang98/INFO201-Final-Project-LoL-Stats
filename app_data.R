@@ -42,14 +42,14 @@ withProgress(message = "Analyzing Data: ", value = 0, {
            totalCreepScore = neutralMinionsKilled + totalMinionsKilled
     ) %>%
     dplyr::rename(key = champion)
-  
+
   incProgress(amount = 1/numSteps, detail = "Match Summary")
   match_summary <<- match_summary %>%
     mutate(hour = as.numeric(format(
       strptime(match_summary$time, "%H:%M:%S"), "%H")))
   Sys.sleep(1)
 
-  
+
   incProgress(amount = 1/numSteps, detail = "Champion Summary")
   # Data per champion played
   champion_summary <<- data.frame()
@@ -66,7 +66,7 @@ withProgress(message = "Analyzing Data: ", value = 0, {
                      avgVisionScore = mean(visionScore),
                      avgGoldEarned = mean(goldEarned),
                      avgCS = mean(totalMinionsKilled + neutralMinionsKilled))
-  
+
   incProgress(amount = 1/numSteps, detail = "Win Summary")
   # Data based on win/loss
   win_summary <<- match_summary %>%
@@ -97,7 +97,7 @@ withProgress(message = "Analyzing Data: ", value = 0, {
       winInt == 1,
       "Win",
       "Loss"))
-  
+
   incProgress(amount = 1/numSteps, detail = "Time Summary")
   # Data based on time of day
   time_summary <<- match_summary %>%
@@ -130,17 +130,17 @@ withProgress(message = "Analyzing Data: ", value = 0, {
       winInt == 1,
       "Win",
       "Loss"))
-  
+
   incProgress(amount = 1/numSteps, detail = "Winrate Data")
-  
+
   # Add data for timeStatsGraph
   recent_match_data$date <- match_summary$date[1:nrow(recent_match_data)]
   recent_match_data$totalCreepScore <- match_summary$totalCreepScore[1:nrow(recent_match_data)]
   recent_match_data$gameNum <- nrow(recent_match_data) - as.numeric(rownames(recent_match_data)) + 1
-  
+
   # Winrate
   info_winrate <<- mean(match_summary$winInt)
-  
+
   winrate_data <<- win_summary[1:2, 1:2]
 
 })

@@ -3,18 +3,18 @@ graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, i
                    yData = yDataIn,
                    win = winIn,
                    stringsAsFactors = FALSE)
-  
+
   df <- df %>% mutate(
     winString = ifelse(win,
            "Won",
            "Lost")
      )
-  
+
   return_plot <- plot_ly(data = df,
                          x = ~xData,
                          y = ~yData
                          )
-  
+
   return_plot <- add_markers(return_plot,
                              y = ~yData,
                              text = ~xData,
@@ -22,7 +22,7 @@ graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, i
                              colors = c("orange",
                                         "blue"),
                              showlegend = FALSE)
-  
+
   if (includeFit) {
     message('yes')
     m <- loess(yData ~ xData, data = df)
@@ -43,12 +43,12 @@ graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, i
                                showlegend = FALSE
     )
   }
-  
+
   xNames <- c(
     "gameNum" = "Game Number",
     "date" = "Date"
   )
-  
+
   yNames <- c(
     "kills" = "Kills",
     "deaths" = "Deaths",
@@ -66,16 +66,16 @@ graph_time_stats_plotly <- function(xDataIn, yDataIn, winIn, xNameIn, yNameIn, i
     "totalCreepScore" = "CS",
     "visionScore" = "Vision Score"
   )
-  
-  return_plot <- return_plot %>% 
+
+  return_plot <- return_plot %>%
     layout(xaxis = list(title = xNames[[xNameIn]]),
            yaxis = list(title = yNames[[yNameIn]]))
-  
-  return_plot <- return_plot %>% 
+
+  return_plot <- return_plot %>%
     layout(plot_bgcolor  = "rgba(0, 0, 0, 0)",
            paper_bgcolor = "rgba(0, 0, 0, 0)",
            fig_bgcolor   = "rgba(0, 0, 0, 0)")
-  
+
   return(return_plot)
 }
 
