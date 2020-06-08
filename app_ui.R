@@ -98,7 +98,9 @@ ui <- material_page(title = "LoL Stats",
                       time in their recent games played."),
 
                     p("All data comes from the Riot API, and is all
-                      player-specific."),
+                      player-specific. Widgets to the left allow you
+                      to filter all information by account, as well as
+                      how many matches to be considered."),
 
                     p("Enter your information to the left and click
                       get stats to get started. Or for some example
@@ -191,7 +193,7 @@ ui <- material_page(title = "LoL Stats",
                column(1),
                column(10,
                       h4("INFO 201 Information"),
-                      p("Here, a bar chart further split into
+                      p("A bar chart further split into
                         win/loss by color allows players to see
                         various information about the champions
                         they played recently. One can see how
@@ -202,7 +204,12 @@ ui <- material_page(title = "LoL Stats",
                         One can also get a quick overview at
                         which champions may be more effective,
                         as they can see the rough winrates with
-                        the colored splitting of the bar graph.")
+                        the colored splitting of the bar graph."),
+                      
+                      p("Amount of games to be included can be filtered
+                  from the Account tab's slider and button, though
+                  this requires one to wait a few seconds, as this
+                  pulls from the API to update the data again.")
                ),
                column(1)
             )
@@ -217,13 +224,18 @@ ui <- material_page(title = "LoL Stats",
                column(1),
                column(10,
                       h4("INFO 201 Information"),
-                      p("Here, a bar graph similar to the champions
+                      p("A bar graph similar to the champions
                         tab was chosen for similar reasons. As the
                         data is binned by hour start, a line graph
                         is not appropriate, and the splitting of the
                         bar graph into win and loss allows for
                         analysis of whether there's an optimal
-                        time to play for the specific player.")
+                        time to play for the specific player."),
+                      
+                      p("Amount of games to be included can be filtered
+                  from the Account tab's slider and button, though
+                  this requires one to wait a few seconds, as this
+                  pulls from the API to update the data again.")
                ),
                column(1)
             )
@@ -253,12 +265,17 @@ ui <- material_page(title = "LoL Stats",
          column(1),
          column(10,
                 h4("INFO 201 Information"),
-                p("Here, four key statistics are averaged over
+                p("Four key statistics are averaged over
                   the games lost and won, and compared. This
                   allows for investigating which factors may
                   possibly be a cause for winning or losing.
                   Possible conclusions are elaborated upon
-                  further in the summary section.")
+                  further in the summary section."),
+                
+                p("Amount of games to be included can be filtered
+                  from the Account tab's slider and button, though
+                  this requires one to wait a few seconds, as this
+                  pulls from the API to update the data again.")
          ),
          column(1)
       )
